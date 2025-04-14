@@ -1,17 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Input from "@/components/UI/Input";
 import Button from "@/components/UI/Button";
 import { verifyOtp, resendOtp } from "@/services/auth.api";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContex";
 
 export default function VerifyOtpForm() {
   const [otp, setOtp] = useState("");
-  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
   const router = useRouter();
+  const { login } = useAuth(); // login method from context
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("auth_email");
@@ -24,9 +27,14 @@ export default function VerifyOtpForm() {
 
   // Mutation for verifying OTP
   const verifyOtpMutation = useMutation({
-    mutationFn: () => verifyOtp(email, otp),//Api call
+    mutationFn: () => verifyOtp(email, otp),
     onSuccess: (data) => {
-      if (data.resetPassword || data.mustResetPassword) {
+      const { access_token, mustResetPassword } = data;
+
+      // Save token and decode it into context
+      login(access_token);
+
+      if (mustResetPassword) {
         router.push("/reset-password");
       } else {
         router.push("/dashboard");
@@ -48,15 +56,10 @@ export default function VerifyOtpForm() {
     },
   });
 
-  const handleVerify = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
-    verifyOtpMutation.mutate(); // triggers the mutation for Api call toverfy
-  };
-
-  const handleResend = () => {
-    setMessage("");
-    resendOtpMutation.mutate(); // triggers the mutation for Api call to resend
+    verifyOtpMutation.mutate();
   };
 
   return (
@@ -66,7 +69,7 @@ export default function VerifyOtpForm() {
         Please enter the one-time password (OTP) sent to your email.
       </p>
 
-      <form onSubmit={handleVerify} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-8">
         <Input
           type="text"
           placeholder="Enter your OTP"
@@ -85,7 +88,7 @@ export default function VerifyOtpForm() {
 
       <p className="mt-4 text-sm text-gray-600">Didn&apos;t receive it?</p>
       <button
-        onClick={handleResend}
+        onClick={() => resendOtpMutation.mutate()}
         className="text-sm text-pink-800 hover:underline cursor-pointer"
         type="button"
         disabled={resendOtpMutation.isPending}
@@ -93,7 +96,9 @@ export default function VerifyOtpForm() {
         {resendOtpMutation.isPending ? "Resending..." : "Resend OTP"}
       </button>
 
-      {message && <p className="mt-4 text-sm text-red-600">{message}</p>}
+      {message && (
+        <p className="mt-4 text-sm text-red-600 font-medium">{message}</p>
+      )}
     </div>
   );
 }

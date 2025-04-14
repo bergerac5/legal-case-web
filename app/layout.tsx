@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import { AuthProvider } from "@/context/AuthContex";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,12 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.className} $ antialiased`}
-      >
-        <Providers>{children}</Providers>
-      </body>
-    </html>
+     <html lang="en">
+     <body className={`${inter.className} $ antialiased`}>
+       <AuthProvider>
+         <Providers>{children}</Providers> {/* React Query Provider */}
+       </AuthProvider>
+     </body>
+   </html>
   );
 }
