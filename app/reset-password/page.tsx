@@ -2,7 +2,12 @@ import React from 'react'
 
 const ResetPassword = () => {
   return (
-    <div>ResetPassword</div>
+    <div>
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-4 text-center">Dashboard</h1>
+        {/*to do resetpassword page content here */}
+      </div>
+    </div>
   )
 }
 
