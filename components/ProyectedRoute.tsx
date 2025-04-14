@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 type Props = {
   children: React.ReactNode;
-  allowedRoles: string[]; // example: ["admin", "staff"]
+  allowedRoles: string[]; // example: ["admin", "lawyer"]
 };
 
 export default function ProtectedRoute({ children, allowedRoles }: Props) {
@@ -21,10 +21,6 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
       router.push("/unauthorized"); // Logged in but role not allowed
     }
   }, [user, allowedRoles, router]);
-
-  if (!user || !allowedRoles.includes(user.role)) {
-    return null; // or loading spinner
-  }
 
   return <>{children}</>;
 }
