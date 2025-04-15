@@ -1,4 +1,4 @@
-import ProtectedRoute from "@/components/ProyectedRoute";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import React from "react";
 
 const Dashboard = () => {

@@ -19,7 +19,7 @@ This is the **frontend** of the Legal Case Management platform built using **Nex
 ## Folder Structure
 
 ```
-my-nextjs-project/
+legal-cases-web/
 ├── app/                    # Pages (Next.js App Router)
 │   ├── login/              # Login form
 │   ├── verify-otp/         # OTP entry screen
