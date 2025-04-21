@@ -4,58 +4,26 @@ import { useState } from "react";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 import Link from "next/link";
+import { getUsers } from "./services/handle.api";
+import { useQuery } from "@tanstack/react-query";
 
-const users = [
-  {
-    id: "001",
-    name: "John Doe",
-    email: "john.doe@email.com",
-    avatar: "/avatars/john.jpg",
-  },
-  {
-    id: "002",
-    name: "Jane Smith",
-    email: "jane.smith@email.com",
-    avatar: "/avatars/jane.jpg",
-  },
-  {
-    id: "003",
-    name: "Michael Johnson",
-    email: "michael.johnson@email.com",
-    avatar: "/avatars/michael.jpg",
-  },
-  {
-    id: "004",
-    name: "Emily Brown",
-    email: "emily.brown@email.com",
-    avatar: "/avatars/emily.jpg",
-  },
-  {
-    id: "005",
-    name: "David Wilson",
-    email: "david.wilson@email.com",
-    avatar: "/avatars/david.jpg",
-  },
-  {
-    id: "006",
-    name: "Sarah Miller",
-    email: "sarah.miller@email.com",
-    avatar: "/avatars/sarah.jpg",
-  },
-  {
-    id: "007",
-    name: "Kevin Lee",
-    email: "kevin.lee@email.com",
-    avatar: "/avatars/kevin.jpg",
-  },
-];
 
 export default function UserManagement() {
   const [search, setSearch] = useState("");
+  function uuidToShortId(uuid: string, index: number): string {
+    // Simple version: Use index + 1 (001, 002, etc.)
+    return String(index + 1).padStart(3, '0');
+  }
 
-  const filteredUsers = users.filter((user) =>
+  const { data: users = [], error, isLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+  });
+  console.log("Users data:", users, "Error:", error);
+
+  /*const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(search.toLowerCase())
-  );
+  );*/
 
   return (
     <div className="p-6">
@@ -82,6 +50,9 @@ export default function UserManagement() {
         </div>
       </div>
 
+      {isLoading && <p>Loading users...</p>}
+      {error && <p className="text-red-600">Error loading users: {String(error)}</p>}
+
       <div className="border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-100">
@@ -94,12 +65,12 @@ export default function UserManagement() {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
+            {users.map((user,index) => (
               <tr key={user.id} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2">{user.id}</td>
+                <td className="px-4 py-2">{uuidToShortId(user.id, index)}</td>
                 <td className="px-4 py-2">
                   <Image
-                    src={user.avatar}
+                    src="/avatars/john.jpg"
                     alt={user.name}
                     width={40}
                     height={40}

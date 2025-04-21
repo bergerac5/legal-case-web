@@ -36,12 +36,10 @@ export default function AddUserPage() {
 
   const onSubmit = (data: UserFormData) => {
     console.log("User data:", data);
-    // Here you would typically call an API to save the user
     router.push("/user-management");
   };
 
   const handleDelete = () => {
-    // Delete functionality would go here
     console.log("User deleted");
     router.push("/user-management");
   };
@@ -51,8 +49,8 @@ export default function AddUserPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold text-gray-800">Add User</h1>
-        <Link href="/user-management">
-          <Button variant="outline" className="text-gray-700">
+        <Link href="/">
+          <Button variant="outline" className="text-gray-700 bg-rose-500">
             Back to Users
           </Button>
         </Link>
@@ -113,48 +111,6 @@ export default function AddUserPage() {
             </div>
           </div>
         </section>
-
-        {/* Account Details Section */}
-        <section className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
-            Account Details
-          </h2>
-          
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="password" className="text-gray-600">
-                - Password
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="************"
-                className="mt-1 border-gray-300"
-                {...register("password")}
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="confirmPassword" className="text-gray-600">
-                - Confirm Password
-              </Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="************"
-                className="mt-1 border-gray-300"
-                {...register("confirmPassword")}
-              />
-              {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword.message}</p>
-              )}
-            </div>
-          </div>
-        </section>
-
         {/* Divider */}
         <hr className="border-gray-200 my-6" />
 
@@ -164,19 +120,22 @@ export default function AddUserPage() {
             <Button
               type="button"
               variant="outline"
-              className="border-gray-300 text-gray-700"
+              className="border-gray-300 text-gray-700 bg-rose-500"
               onClick={() => router.push("/user-management")}
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-rose-500 hover:bg-rose-600 text-white">
+            <Button
+              type="submit"
+              className="bg-rose-500 hover:bg-red-600 text-white"
+            >
               Save
             </Button>
           </div>
           <Button
             type="button"
             variant="destructive"
-            className="text-white"
+            className="text-white bg-rose-500"
             onClick={handleDelete}
           >
             Delete User
