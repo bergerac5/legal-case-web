@@ -16,9 +16,17 @@ export default function LoginForm() {
 
   const loginMutation = useMutation({
     mutationFn: () => login(email, password),// Api call
-    onSuccess: () => {
-      localStorage.setItem("auth_email", email); // Save email to localStorage for OTP verification page
-      router.push("/verify-otp");// Navigate to the OTP verification page
+    onSuccess: (data) => {
+      const { resetPassword, userId } = data;
+    
+      localStorage.setItem("auth_email", email);
+      localStorage.setItem("user_id", userId); // Save user ID if needed
+    
+      if (resetPassword) {
+        router.push("/reset-password");
+      } else {
+        router.push("/verify-otp");
+      }
     },
     onError: () => {
     setErrorMessage("Invalid credentials"); // Log error and show a notify user whats happening in message
