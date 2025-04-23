@@ -3,8 +3,13 @@
 import { useState } from 'react';
 import Button from "@/components/UI/Button";
 import { Eye, EyeOff } from "lucide-react";
+import { resetUserPassword } from "@/services/password/password.api";
 
-export default function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+  email: string;
+}
+
+export default function ResetPasswordForm({ email }: ResetPasswordFormProps) {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,9 +23,11 @@ export default function ResetPasswordForm() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [apiError, setApiError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setApiError("");
     let valid = true;
     const newErrors = {
       currentPassword: '',
@@ -56,12 +63,16 @@ export default function ResetPasswordForm() {
     setErrors(newErrors);
 
     if (valid) {
-      // Submit logic would go here
-      setIsSuccess(true);
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      setTimeout(() => setIsSuccess(false), 3000);
+      try {
+        await resetUserPassword(email, currentPassword, newPassword, confirmPassword);
+        setIsSuccess(true);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setTimeout(() => setIsSuccess(false), 3000);
+      } catch (error: any) {
+        setApiError(error?.response?.data?.message || "Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -69,7 +80,7 @@ export default function ResetPasswordForm() {
     const value = e.target.value;
     setNewPassword(value);
 
-    // Enhanced password strength check
+    // Password strength logic
     if (value.length === 0) {
       setPasswordStrength("");
     } else if (value.length < 8) {
@@ -86,6 +97,7 @@ export default function ResetPasswordForm() {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Reset Password</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+
         {/* Current Password Field */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
@@ -178,6 +190,11 @@ export default function ResetPasswordForm() {
         {isSuccess && (
           <div className="p-3 bg-green-100 text-green-700 rounded-md text-center">
             Password reset successfully
+          </div>
+        )}
+        {apiError && (
+          <div className="p-3 bg-red-100 text-red-700 rounded-md text-center">
+            {apiError}
           </div>
         )}
       </form>

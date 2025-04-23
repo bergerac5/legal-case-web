@@ -17,3 +17,19 @@ export const changePasswordBeforeExpire = async (
     return res.data;
 };
 
+//change default password
+export const resetUserPassword = async (
+    email: string,
+    old_password: string,
+    new_password: string,
+    confirm_new_password: string
+) => {
+    const res = await axios.post(`${API_BASE_URL}/password/reset-password`, {
+        email,
+        old_password,
+        new_password,
+        confirm_new_password,
+    });
+    return res.data;
+};
+

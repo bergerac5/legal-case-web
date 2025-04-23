@@ -11,7 +11,7 @@ const ResetPassword = () => {
     className="absolute top-0 left-0 w-full h-full object-fill"
   />
   <div className="relative z-10 flex items-center justify-center h-full">
-    <ResetPasswordForm/>
+    <ResetPasswordForm email={'birakarama5@gmail.com'}/>
   </div>
 </div>
 
