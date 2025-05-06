@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { addProperty } from "@/services/insurance.api";
 import Input from "../UI/Input";
+import Button from "../UI/Button";
 
 export default function AddProperty() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function AddProperty() {
 
   const [error, setError] = useState("");
 
-  const mutation = useMutation({
+  const registerPropertyMutation = useMutation({
     mutationFn: addProperty,
     onSuccess: () => {
       router.push("/properties");
@@ -107,17 +108,16 @@ export default function AddProperty() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-4 py-2 bg-gray-200 rounded"
+            className="px-4 py-2 bg-gray-200 rounded cursor-pointer"
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            className="px-6 py-2 bg-pink-700 text-white rounded hover:bg-pink-800"
-            disabled={mutation.isPending}
-          >
-            {mutation.isPending ? "Saving..." : "Save"}
-          </button>
+          <Button
+           type="submit"
+           label={registerPropertyMutation.isPending ? "Saving..." : "Save"}
+           className="bg-pink-800 text-white py-2 px-6 rounded-md hover:bg-pink-900 cursor-pointer"
+           disabled={registerPropertyMutation.isPending}
+          />
         </div>
 
         {error && <p className="text-red-600 mt-4">{error}</p>}
