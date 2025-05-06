@@ -1,15 +1,14 @@
+
+// ResetPasswordForm.tsx
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from "@/components/UI/Button";
 import { Eye, EyeOff } from "lucide-react";
 import { resetUserPassword } from "@/services/password/password.api";
+import { useRouter } from 'next/navigation'; 
 
-interface ResetPasswordFormProps {
-  email: string;
-}
-
-export default function ResetPasswordForm({ email }: ResetPasswordFormProps) {
+export default function ResetPasswordForm() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -24,7 +23,20 @@ export default function ResetPasswordForm({ email }: ResetPasswordFormProps) {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [email, setEmail] = useState("");
+  const router = useRouter();
 
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window !== 'undefined') {
+      const storedEmail = localStorage.getItem("auth_email");
+      if (storedEmail) {
+        setEmail(storedEmail);
+      } else {
+        router.push("/login");
+      }
+    }
+  }, [router]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setApiError("");
@@ -69,7 +81,9 @@ export default function ResetPasswordForm({ email }: ResetPasswordFormProps) {
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
-        setTimeout(() => setIsSuccess(false), 3000);
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
       } catch (error: any) {
         setApiError(error?.response?.data?.message || "Something went wrong. Please try again.");
       }

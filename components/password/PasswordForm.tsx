@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/UI/Button";
 import Input from "@/components/UI/Input";
 import { changePasswordBeforeExpire } from "@/services/password/password.api";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 export default function PasswordForm() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -17,6 +18,20 @@ export default function PasswordForm() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedEmail = localStorage.getItem("auth_email");
+      if (storedEmail) {
+        setEmail(storedEmail);
+      } else {
+        router.push("/login");
+      }
+    }
+  }, [router]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,11 +43,24 @@ export default function PasswordForm() {
       return;
     }
 
+    if (!email) {
+      setErrorMessage("Email is missing. Please log in again.");
+      return;
+    }
+
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      setErrorMessage("User is not authenticated.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       await changePasswordBeforeExpire(
-        "birakarama5@gmail.com", // Replace with dynamic user email if available
+        token,
+        email,
         currentPassword,
         newPassword,
         confirmPassword
@@ -43,15 +71,24 @@ export default function PasswordForm() {
       setNewPassword("");
       setConfirmPassword("");
       setErrorMessage("");
+
+      // Clear localStorage to log user out
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("auth_email");
+
+      // Delay and then redirect to login
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000); 
     } catch (error: any) {
       setErrorMessage(
         error.response?.data?.message || "Something went wrong. Please try again."
       );
     } finally {
       setIsLoading(false);
-      setTimeout(() => setIsSuccess(false), 3000);
     }
   };
+
 
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -122,10 +159,10 @@ export default function PasswordForm() {
         {passwordStrength && (
           <p
             className={`text-xs mt-1 ${passwordStrength === "Weak"
-                ? "text-red-500"
-                : passwordStrength === "Medium"
-                  ? "text-yellow-500"
-                  : "text-green-500"
+              ? "text-red-500"
+              : passwordStrength === "Medium"
+                ? "text-yellow-500"
+                : "text-green-500"
               }`}
           >
             Password strength:{" "}

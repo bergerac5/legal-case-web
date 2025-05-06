@@ -48,7 +48,9 @@ legal-cases-web/
  `/login`              Email/password login form              
  `/verify-otp`         OTP form shown after login             
  `/reset-password`     Shown if user has default password     
- `/dashboard`          Dashboard for testing auth function      
+ `/dashboard`          Dashboard for testing auth function 
+  `/profile`           Change password before being expired
+  `/reset-password`    Change default password to user defined password
 
 
 ---
