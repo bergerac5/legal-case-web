@@ -28,7 +28,34 @@ interface PaginatedResponse {
   page: number;
   totalPages: number;
 }
-
+interface PaginatedClaimResponse {
+  data: InsuranceClaim[];  // Adjust this type to match the claim data
+  total: number;
+  page: number;
+  totalPages: number;
+}
+export interface ClaimPropertyInput {
+  property_id: string;
+  type: "Client" | "REG";
+  claimProgress: "PENDING" | "COMPLETED" | "FAILED";
+  dateOfClaim: string;
+  description: string;
+  claimAmount: number;
+}
+export interface InsuranceClaim {
+  id: string;
+  type: string;
+  claimProgress: string;
+  dateOfClaim: string;
+  description: string;
+  claimAmount: number;
+  property: {
+    id: string;
+    name: string;
+    department: string;
+    location: string;
+  };
+}
 export const getAllProperties = async (page: number): Promise<PaginatedResponse> => {
   const response = await axios.get(`${API_BASE_URL}/property/all?page=${page}&limit=10`);
   return response.data;
@@ -43,14 +70,17 @@ export async function getPropertyById(id: string | number) {
   const response = await axios.get(`${API_BASE_URL}/property/${id}`);
   return response.data
 }
+export const claimProperty = async (data: ClaimPropertyInput) => {
+  const response = await axios.post(`${API_BASE_URL}/insurance/claim`, data);
+  return response.data;
+};
 
-export async function claimProperty(id: string | number) {
-  const res = await fetch(`/api/claims`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ propertyId: id }),
-  });
-  if (!res.ok) throw new Error("Failed to submit claim");
-  return res.json();
-}
+export const getAllPropertyClaims = async (page: number): Promise<PaginatedClaimResponse> => {
+  const response = await axios.get(`${API_BASE_URL}/property/allclai?page=${page}&limit=10`);
+  return response.data;
+};
+
+
+
+
 

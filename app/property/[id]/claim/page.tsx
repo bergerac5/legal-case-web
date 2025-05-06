@@ -1,3 +1,4 @@
+import ClaimForm from '@/components/Claim/Property/ClaimForm'
 import Navbar from '@/components/Navbar/NavBar'
 import React from 'react'
 
@@ -6,6 +7,7 @@ const SinglePropertyPage = () => {
     <div>
            <div>
           <Navbar/>
+          <ClaimForm/>
         </div>
         </div>
   )
