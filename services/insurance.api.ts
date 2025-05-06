@@ -76,7 +76,7 @@ export const claimProperty = async (data: ClaimPropertyInput) => {
 };
 
 export const getAllPropertyClaims = async (page: number): Promise<PaginatedClaimResponse> => {
-  const response = await axios.get(`${API_BASE_URL}/property/allclai?page=${page}&limit=10`);
+  const response = await axios.get(`${API_BASE_URL}/property/allclaim?page=${page}&limit=10`);
   return response.data;
 };
 
