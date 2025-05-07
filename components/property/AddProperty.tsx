@@ -46,6 +46,7 @@ export default function AddProperty() {
       boughtTime: new Date(formData.boughtTime).toISOString(),
     };
   
+
     registerPropertyMutation.mutate({
       ...propertyData,
       status: formData.status,
