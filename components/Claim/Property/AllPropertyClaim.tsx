@@ -101,13 +101,13 @@ export default function PropertiesClaim() {
               ))}
             </tbody>
           </table>
-
+         {/*Pagination Controls */}
           {data.total > ROWS_PER_PAGE && (
             <div className="flex justify-center items-center gap-4 mt-4">
               <button
                 onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                 disabled={page === 1}
-                className="px-4 py-2 border rounded disabled:opacity-50"
+                className="px-4 py-2 border rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               >
                 Previous
               </button>
@@ -117,7 +117,7 @@ export default function PropertiesClaim() {
               <button
                 onClick={() => setPage((prev) => Math.min(prev + 1, data.totalPages))}
                 disabled={page === data.totalPages}
-                className="px-4 py-2 border rounded disabled:opacity-50"
+                className="px-4 py-2 border rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               >
                 Next
               </button>
