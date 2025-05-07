@@ -40,7 +40,7 @@ export default function Navbar() {
       </div>
 
       {/* Icons */}
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center space-x-6 cursor-pointer">
         <Search className="text-gray-600 hover:text-gray-800" size={18} />
         <Settings className="text-gray-600 hover:text-gray-800" size={18} />
         <Bell className="text-gray-600 hover:text-gray-800" size={18} />
