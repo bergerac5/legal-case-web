@@ -1,46 +1,17 @@
-"use client";
-
+"use client"
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getAllClientClaims } from "@/services/insurance.api";
 import { FolderX } from "lucide-react";
 import Link from "next/link";
-
-interface Client {
-  names: string;
-  poc: string;
-  phoneNumber: string;
-  address: string;
-}
-
-interface DamageDetail {
-  itemName: string;
-}
-
-interface ClientClaim {
-  id: string;
-  type: string;
-  claimProgress: string;
-  claimAmount: number;
-  dateOfClaim: string;
-  description: string;
-  client: Client;
-  damageDetails: DamageDetail[];
-}
-
-interface PaginatedClaimResponse {
-  data: ClientClaim[];
-  total: number;
-  page: number;
-  totalPages: number;
-}
+import { PaginatedClientClaimResponse } from "@/lib/types";
 
 const ROWS_PER_PAGE = 10;
 
 export default function ClientsClaims() {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, error } = useQuery<PaginatedClaimResponse>({
+  const { data, isLoading, error } = useQuery<PaginatedClientClaimResponse>({
     queryKey: ["client-claims", page],
     queryFn: () => getAllClientClaims(page),
     placeholderData: () => ({
@@ -76,37 +47,42 @@ export default function ClientsClaims() {
                 <th className="p-2">ID</th>
                 <th className="p-2">Client</th>
                 <th className="p-2">Phone</th>
+                <th className="p-2">POC</th>
+                <th className="p-2">Address</th>
                 <th className="p-2">Progress</th>
                 <th className="p-2">Claim Amount</th>
                 <th className="p-2">Date</th>
                 <th className="p-2">Description</th>
                 <th className="p-2">Damaged Items</th>
+                <th className="p-2">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {data.data.map((claim, index) => (
-                <tr
-                  key={claim.id}
-                  className={`${index % 2 === 0 ? "bg-white" : "bg-gray-100"} text-center border-t`}
-                >
-                  <td className="p-2">{String((page - 1) * ROWS_PER_PAGE + index + 1).padStart(3, "0")}</td>
-                  <td className="p-2">{claim.client.names}</td>
-                  <td className="p-2">{claim.client.phoneNumber}</td>
-                  <td className="p-2">{claim.claimProgress}</td>
-                  <td className="p-2">${claim.claimAmount}</td>
-                  <td className="p-2">{new Date(claim.dateOfClaim).toLocaleDateString()}</td>
-                  <td className="p-2 max-w-xs truncate">{claim.description}</td>
-                  <td className="p-2">
-                    {claim.damageDetails.map((item, i) => (
-                      <div key={i}>{item.itemName}</div>
-                    ))}
-                  </td>
-                  <td className="p-2">
-                    <Link href={`/client-claim/${claim.id}`} className="text-blue-600 hover:underline">View</Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {data.data.map((claim, index) => (
+    <tr key={claim.claimId} className={`${index % 2 === 0 ? "bg-white" : "bg-gray-100"} text-center border-t`}>
+      <td className="p-2">{String((page - 1) * ROWS_PER_PAGE + index + 1).padStart(3, "0")}</td>
+      <td className="p-2">{claim.client[0]?.names}</td>
+      <td className="p-2">{claim.client[0]?.phoneNumber}</td>
+      <td className="p-2">{claim.client[0]?.poc}</td>
+      <td className="p-2">{claim.client[0]?.address}</td>
+      <td className="p-2">{claim.claimProgress}</td>
+      <td className="p-2">${claim.claimAmount}</td>
+      <td className="p-2">{new Date(claim.dateOfClaim).toLocaleDateString()}</td>
+      <td className="p-2 max-w-xs truncate">{claim.description}</td>
+      <td className="p-2">
+        {claim.damagedItems.slice(0, 2).map((item, i) => (
+          <div key={i}>{item.itemName}</div>
+        ))}
+      </td>
+      <td className="p-2">
+        <Link href={`/client-claim/${claim.claimId}`} className="text-blue-600 hover:underline">
+          View
+        </Link>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
 
           {/* Pagination Controls */}

@@ -95,7 +95,7 @@ export default function PropertiesClaim() {
                   <td className="p-2">{new Date(claim.dateOfClaim).toLocaleDateString()}</td>
                   <td className="p-2 max-w-xs truncate">{claim.description}</td>
                   <td className="p-2">
-                    <Link href={`/property-claim/${claim.id}`} className="text-blue-600 hover:underline">View</Link>
+                    <Link href={`/property-claims/${claim.id}`} className="text-blue-600 hover:underline">View</Link>
                   </td>
                 </tr>
               ))}
