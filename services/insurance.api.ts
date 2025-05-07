@@ -29,7 +29,7 @@ interface PaginatedResponse {
   totalPages: number;
 }
 interface PaginatedClaimResponse {
-  data: InsuranceClaim[];  // Adjust this type to match the claim data
+  data: InsuranceClaim[];
   total: number;
   page: number;
   totalPages: number;
