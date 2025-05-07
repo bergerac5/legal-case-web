@@ -17,7 +17,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center justify-between px-8 py-4">
+    <nav className="sticky top-0 z-50 bg-white shadow-md flex items-center justify-between px-8 py-4">
       {/* Logo & Menu */}
       <div className="flex items-center space-x-10">
         <Image src={logo} alt="REG Logo" width={90} height={40} />
