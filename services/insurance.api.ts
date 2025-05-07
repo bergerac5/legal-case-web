@@ -71,7 +71,7 @@ export async function getPropertyById(id: string | number) {
   return response.data
 }
 export const claimProperty = async (data: ClaimPropertyInput) => {
-  const response = await axios.post(`${API_BASE_URL}/insurance/claim`, data);
+  const response = await axios.post(`${API_BASE_URL}/property/claim`, data);
   return response.data;
 };
 
