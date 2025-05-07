@@ -59,9 +59,9 @@ export default function PropertyDetails() {
         <div className="pt-4 text-center">
           <button
             onClick={() => router.push(`/property/${id}/claim`)}
-            className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded shadow"
+            className="bg-pink-800 text-white py-2 px-6 rounded-md hover:bg-pink-900 cursor-pointer"
           >
-            Submit a Claim
+            Claim This Property
           </button>
         </div>
       </div>

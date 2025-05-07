@@ -56,28 +56,28 @@ export default function AddProperty() {
       <div className="space-y-4">
             <Input
               type="text"
-              placeholder="Property Name"
+              placeholder="Name Of Property"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
               required
             />
             <Input
               type="number"
-              placeholder="Property Price"
+              placeholder="Price Property"
               value={formData.price}
               onChange={(e) => handleChange("price", e.target.value)}
               required
             />
             <Input
               type="Text"
-              placeholder="Department"
+              placeholder="Department Property Belong"
               value={formData.department}
               onChange={(e) => handleChange("department", e.target.value)}
               required
             />
              <Input
               type="Text"
-              placeholder="Location"
+              placeholder="Location Of Property"
               value={formData.location}
               onChange={(e) => handleChange("location", e.target.value)}
               required
@@ -91,14 +91,14 @@ export default function AddProperty() {
             />
             <Input
               type="Text"
-              placeholder="Manufacturer"
+              placeholder="Manufacturer Of Property"
               value={formData.manufacturer}
               onChange={(e) => handleChange("manufacturer", e.target.value)}
               required
             />
             <Input
               type="Text"
-              placeholder="Supplier"
+              placeholder="Supplier Of Property"
               value={formData.supplier}
               onChange={(e) => handleChange("supplier", e.target.value)}
               required
