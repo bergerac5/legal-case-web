@@ -1,4 +1,4 @@
-import PropertiesClaim from '@/components/Claim/Property/AllPropertyClaim'
+import ClientsClaims from '@/components/Claim/Client/AllClientClaim'
 import Navbar from '@/components/Navbar/NavBar'
 import React from 'react'
 
@@ -7,7 +7,7 @@ const PropertyClaimPage = () => {
     <div>
         <div>
         <Navbar/>
-        <PropertiesClaim/>
+        <ClientsClaims/>
         </div>
     </div>
   )

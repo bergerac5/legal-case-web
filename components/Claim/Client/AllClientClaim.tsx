@@ -37,7 +37,7 @@ interface PaginatedClaimResponse {
 
 const ROWS_PER_PAGE = 10;
 
-export default function ClientClaims() {
+export default function ClientsClaims() {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, error } = useQuery<PaginatedClaimResponse>({
