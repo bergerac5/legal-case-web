@@ -1,11 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { addProperty } from "@/services/insurance.api";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
+import { AxiosError } from "axios";
 
 export default function AddProperty() {
   const router = useRouter();
@@ -18,6 +18,7 @@ export default function AddProperty() {
     boughtTime: "",
     manufacturer: "",
     supplier: "",
+    status: true
   });
 
   const [error, setError] = useState("");
@@ -27,8 +28,9 @@ export default function AddProperty() {
     onSuccess: () => {
       router.push("/properties");
     },
-    onError: (error: any) => {
-      setError(error.response?.data?.message || "Failed to add property.");
+    onError: (error: AxiosError) => {
+      setError(
+        (error.response?.data as { message?: string })?.message || "Failed to add property.");
     },
   });
 
@@ -41,7 +43,7 @@ export default function AddProperty() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate({
+    registerPropertyMutation.mutate({
       ...formData,
       price: Number(formData.price),
     });

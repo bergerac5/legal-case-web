@@ -3,7 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getAllPropertyClaims } from "@/services/insurance.api";
-import { FolderX } from "lucide-react";
+import { FolderX} from "lucide-react";
+import Link from "next/link";
 
 // Define the types
 interface Property {
@@ -68,7 +69,7 @@ export default function PropertiesClaim() {
           <table className="w-full table-auto border border-gray-300">
             <thead>
               <tr className="bg-gray-200 text-left">
-                <th className="p-2">#</th>
+                <th className="p-2">ID</th>
                 <th className="p-2">Property</th>
                 <th className="p-2">Location</th>
                 <th className="p-2">Type</th>
@@ -76,6 +77,7 @@ export default function PropertiesClaim() {
                 <th className="p-2">Claim Amount</th>
                 <th className="p-2">Date</th>
                 <th className="p-2">Description</th>
+                <th className="p-2">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -92,6 +94,9 @@ export default function PropertiesClaim() {
                   <td className="p-2">${claim.claimAmount}</td>
                   <td className="p-2">{new Date(claim.dateOfClaim).toLocaleDateString()}</td>
                   <td className="p-2 max-w-xs truncate">{claim.description}</td>
+                  <td className="p-2">
+                    <Link href={`/property-claim/${claim.id}`} className="text-blue-600 hover:underline">View</Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

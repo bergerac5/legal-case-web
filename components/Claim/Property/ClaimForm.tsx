@@ -11,7 +11,7 @@ export default function ClaimForm() {
 
   const [description, setDescription] = useState("");
   const [type, setType] = useState<"Client" | "REG">("REG");
-  const [claimAmount, setClaimAmount] = useState(""); // changed from number to string
+  const [claimAmount, setClaimAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +27,7 @@ export default function ClaimForm() {
         claimAmount: Number(claimAmount), // convert to number
       });
       alert("Claim submitted!");
-      router.push(`/property/${id}`);
+      router.push("/property-claim");
     } catch (err) {
       console.error(err);
       alert("Submission failed.");
@@ -51,10 +51,11 @@ export default function ClaimForm() {
 
         {/* Claim Type */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
+        <label htmlFor="type" className="block text-sm font-medium text-gray-700">
             Claim Type
           </label>
           <select
+             id="type"
             value={type}
             onChange={(e) => setType(e.target.value as "Client" | "REG")}
             className="w-full border border-gray-300 rounded px-4 py-2"
