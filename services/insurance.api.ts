@@ -63,7 +63,7 @@ export const getAllProperties = async (page: number): Promise<PaginatedResponse>
 
 
 export const addProperty = async (property: CreatePropertyInput) => {
-  const response =await axios.post(`${API_BASE_URL}/property/register`,{ property});
+  const response =await axios.post(`${API_BASE_URL}/property/register`,property);
   return response.data;
 };
 export async function getPropertyById(id: string | number) {

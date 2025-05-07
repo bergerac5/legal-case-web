@@ -18,7 +18,7 @@ export default function Navbar() {
 
   return (
     <nav className="flex items-center justify-between px-8 py-4">
-      {/* Logo + Menu */}
+      {/* Logo & Menu */}
       <div className="flex items-center space-x-10">
         <Image src={logo} alt="REG Logo" width={90} height={40} />
         <ul className="flex space-x-6 text-sm font-medium">

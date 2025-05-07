@@ -35,17 +35,20 @@ export default function AddProperty() {
   });
 
   const handleChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    registerPropertyMutation.mutate({
+    const propertyData = {
       ...formData,
       price: Number(formData.price),
+      boughtTime: new Date(formData.boughtTime).toISOString(),
+    };
+  
+    registerPropertyMutation.mutate({
+      ...propertyData,
+      status: formData.status,
     });
   };
 
