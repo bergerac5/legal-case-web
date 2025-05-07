@@ -56,6 +56,34 @@ export interface InsuranceClaim {
     location: string;
   };
 }
+interface Client {
+  names: string;
+  poc: string;
+  phoneNumber: string;
+  address: string;
+}
+
+interface DamageDetail {
+  itemName: string;
+}
+interface ClientClaim {
+  id: string;
+  type: string;
+  claimProgress: string;
+  claimAmount: number;
+  dateOfClaim: string;
+  description: string;
+  client: Client;
+  damageDetails: DamageDetail[];
+}
+
+interface PaginatedClientClaimResponse {
+  data: ClientClaim[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
 export const getAllProperties = async (page: number): Promise<PaginatedResponse> => {
   const response = await axios.get(`${API_BASE_URL}/property/all?page=${page}&limit=10`);
   return response.data;
@@ -79,6 +107,11 @@ export const getAllPropertyClaims = async (page: number): Promise<PaginatedClaim
   const response = await axios.get(`${API_BASE_URL}/property/allclaim?page=${page}&limit=10`);
   return response.data;
 };
+
+export async function getAllClientClaims(page: number): Promise<PaginatedClientClaimResponse> {
+  const res = await axios.get(`${API_BASE_URL}/client/claims?page=${page}`);
+  return res.data;
+}
 
 
 
