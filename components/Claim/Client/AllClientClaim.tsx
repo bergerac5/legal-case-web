@@ -75,7 +75,7 @@ export default function ClientsClaims() {
         ))}
       </td>
       <td className="p-2">
-        <Link href={`/client-claim/${claim.claimId}`} className="text-blue-600 hover:underline">
+        <Link href={`/client-claims/${claim.claimId}`} className="text-blue-600 hover:underline">
           View
         </Link>
       </td>
