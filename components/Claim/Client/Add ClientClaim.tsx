@@ -152,7 +152,7 @@ export default function AddClientClaim() {
           className="text-red-600 font-bold text-xl px-2"
           title="Remove Item"
         >
-          −
+          -
         </button>
       )}
     </div>

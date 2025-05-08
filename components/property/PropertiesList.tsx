@@ -46,8 +46,10 @@ export default function PropertiesPage() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-center mb-6">List Of Available Property</h1>
         <Link href="/add-property">
-          <button className="bg-pink-800 text-white py-2 px-6 rounded-md hover:bg-pink-900 cursor-pointer">
-          + Add Property
+          <button 
+          type="button"
+          className="bg-pink-800 text-white py-2 px-6 rounded-md hover:bg-pink-900 cursor-pointer">
+            + Add Property
           </button>
         </Link>
       </div>
