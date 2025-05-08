@@ -41,7 +41,7 @@ export const getAllPropertyClaims = async (page: number): Promise<PaginatedClaim
 
 //Get SinglePropertyClaim Api Call
 export const getSinglePropertyClaim = async (id: string) => {
-  const response = await axios.get(`${API_BASE_URL}/property/claim/${id}`);
+  const response = await axios.get(`${API_BASE_URL}/property/single-claim/${id}`);
   return response.data;
 };
 
