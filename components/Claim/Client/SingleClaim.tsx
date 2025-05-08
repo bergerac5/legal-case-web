@@ -59,7 +59,7 @@ export default function ClaimDetails() {
           <div><strong>Claim Amount:</strong>{claim.claimAmount} RWF</div>
 
           <div>
-          <label htmlFor="progress" className="block text-sm font-medium text-gray-700"> Progress:</label>
+          <label htmlFor="progress"> <strong>Progress:</strong></label>
             <select id="progress"
               className="ml-2 p-1 border rounded"
               value={claim.claimProgress}
