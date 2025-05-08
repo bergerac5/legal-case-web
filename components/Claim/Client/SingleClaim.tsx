@@ -3,7 +3,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { getClaimClaimById, updateClaimProgress } from "@/services/insurance.api";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 export default function ClaimDetails() {
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const { id } = useParams();
   const queryClient = useQueryClient();
 
@@ -21,6 +23,12 @@ export default function ClaimDetails() {
     mutationFn: updateClaimProgress,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["claim", id] });
+      setMessage({ type: "success", text: "Claim Progress updated successfully!" });
+      setTimeout(() => setMessage(null), 3000); // auto hide notification message after 3 sec
+    },
+    onError: () => {
+      setMessage({ type: "error", text: "Failed to update claim status." });
+      setTimeout(() => setMessage(null), 3000);
     },
   });
 
@@ -51,10 +59,20 @@ export default function ClaimDetails() {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-white p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8 space-y-6">
         <h1 className="text-3xl font-bold text-gray-800">Client Claim Details</h1>
-
+        {message && (
+          <div
+            className={`p-3 rounded text-sm font-medium ${
+              message.type === "success"
+                ? "bg-green-100 text-green-700 border border-green-400"
+                : "bg-red-100 text-red-700 border border-red-400"
+            }`}
+          >
+            {message.text}
+          </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <div><strong>Type:</strong> {claim.type}</div>
-          <div><strong>Date:</strong> {new Date(claim.dateOfClaim).toLocaleDateString()}</div>
+          <div><strong>Type:</strong> {claim.type} Properties</div>
+          <div><strong>Date of Claim:</strong> {new Date(claim.dateOfClaim).toLocaleDateString()}</div>
           <div><strong>Description:</strong> {claim.description}</div>
           <div><strong>Claim Amount:</strong>{claim.claimAmount} RWF</div>
 
@@ -67,7 +85,7 @@ export default function ClaimDetails() {
               disabled={mutation.isPending}
             >
               <option value="PENDING">PENDING</option>
-              <option value="COMPLETED">COMPLATED</option>
+              <option value="COMPLETED">COMPLETED</option>
               <option value="FAILED">FAILED</option>
             </select>
           </div>
@@ -84,7 +102,7 @@ export default function ClaimDetails() {
         </div>
 
         <div className="pt-6">
-          <h2 className="text-xl font-semibold mb-2">Damaged Items</h2>
+          <h2 className="text-xl font-semibold mb-2">Properties Claimed By Client</h2>
           {claim.damagedItems?.length > 0 ? (
             <ul className="list-disc pl-5 text-gray-700">
               {claim.damagedItems.map((item) => (

@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getAllPropertyClaims } from "@/services/insurance.api";
-import { FolderX} from "lucide-react";
+import { FolderX, Loader2} from "lucide-react";
 import Link from "next/link";
 
 // Define the types
@@ -46,11 +46,19 @@ export default function PropertiesClaim() {
     }),
   });
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <Loader2 className="h-8 w-8 text-gray-600 animate-spin" />
+      </div>
+    );
+  }
+
   if (!data) {
     return (
-      <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+      <div className="min-h-screen flex gap-2 items-center justify-center py-10 bg-gray-100">
         <FolderX size={48} className="mb-4" />
-        <p>No claims available.</p>
+        <p>No Property claims available.</p>
       </div>
     );
   }
@@ -71,7 +79,7 @@ export default function PropertiesClaim() {
                 <th className="p-2">ID</th>
                 <th className="p-2">Property</th>
                 <th className="p-2">Location</th>
-                <th className="p-2">Type</th>
+                <th className="p-2">Type Of Claim</th>
                 <th className="p-2">Progress</th>
                 <th className="p-2">Claim Amount</th>
                 <th className="p-2">Date</th>
@@ -88,7 +96,7 @@ export default function PropertiesClaim() {
                   <td className="p-2">{String((page - 1) * ROWS_PER_PAGE + index + 1).padStart(3, "0")}</td>
                   <td className="p-2">{claim.property.name}</td>
                   <td className="p-2">{claim.property.location}</td>
-                  <td className="p-2">{claim.type}</td>
+                  <td className="p-2">{claim.type} Property</td>
                   <td className="p-2">{claim.claimProgress}</td>
                   <td className="p-2">{claim.claimAmount} RWF</td>
                   <td className="p-2">{new Date(claim.dateOfClaim).toLocaleDateString()}</td>

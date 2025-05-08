@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getAllClientClaims } from "@/services/insurance.api";
-import { FolderX } from "lucide-react";
+import { FolderX, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { PaginatedClientClaimResponse } from "@/lib/types";
 
@@ -22,9 +22,17 @@ export default function ClientsClaims() {
     }),
   });
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <Loader2 className="h-8 w-8 text-gray-600 animate-spin" />
+      </div>
+    );
+  }
+
   if (!data) {
     return (
-      <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+      <div className="min-h-screen flex gap-2 items-center justify-center py-10 bg-gray-100">
         <FolderX size={48} className="mb-4" />
         <p>No client claims available.</p>
       </div>
@@ -53,7 +61,7 @@ export default function ClientsClaims() {
                 <th className="p-2">Claim Amount</th>
                 <th className="p-2">Date</th>
                 <th className="p-2">Description</th>
-                <th className="p-2">Damaged Items</th>
+                <th className="p-2">Properties</th>
                 <th className="p-2">Actions</th>
               </tr>
             </thead>

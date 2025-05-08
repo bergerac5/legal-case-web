@@ -25,8 +25,8 @@ export default function PropertyClaimDetails() {
     mutationFn: updateClaimProgress,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["property-claim", id] });
-      setMessage({ type: "success", text: "Claim status updated successfully!" });
-      setTimeout(() => setMessage(null), 3000); // auto hide after 3 sec
+      setMessage({ type: "success", text: "Claim  Progress updated successfully!" });
+      setTimeout(() => setMessage(null), 3000); // auto hide notification message after 3 sec
     },
     onError: () => {
       setMessage({ type: "error", text: "Failed to update claim status." });
@@ -75,13 +75,13 @@ export default function PropertyClaimDetails() {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <div><strong>Type:</strong> {claim.type}</div>
-          <div><strong>Date:</strong> {new Date(claim.dateOfClaim).toLocaleDateString()}</div>
+          <div><strong>Type Of Claim:</strong> {claim.type} Property</div>
+          <div><strong>Date Of Claim:</strong> {new Date(claim.dateOfClaim).toLocaleDateString()}</div>
           <div><strong>Description:</strong> {claim.description}</div>
-          <div><strong>Amount:</strong> {claim.claimAmount} RWF</div>
+          <div><strong>Claim Amount:</strong> {claim.claimAmount} RWF</div>
 
           <div>
-            <label htmlFor="progress"><strong>Status:</strong></label>
+            <label htmlFor="progress"><strong>Claim Progress:</strong></label>
             <select
               id="progress"
               className="ml-2 p-1 border rounded"
@@ -100,9 +100,13 @@ export default function PropertyClaimDetails() {
           <h2 className="text-xl font-semibold mb-2">Property Info</h2>
           <div className="space-y-1 text-gray-700">
             <p><strong>Name:</strong> {claim.property?.name}</p>
+            <p><strong>Owner:</strong> {claim.type}</p>
             <p><strong>Location:</strong> {claim.property?.location}</p>
-            <p><strong>Owner:</strong> {claim.property?.owner}</p>
-            <p><strong>Value:</strong> {claim.property?.value} RWF</p>
+            <p><strong>BouhtDate:</strong> {new Date(claim.property?.boughtTime).toLocaleDateString()} </p>
+            <p><strong>Department:</strong> {claim.property?.department}</p>
+            <p><strong>Property Value:</strong> {claim.property?.price} RWF</p>
+            <p><strong>Supplier:</strong> {claim.property?.supplier}</p>
+            <p><strong>Manufacturer:</strong> {claim.property?.manufacturer}</p>
           </div>
         </div>
       </div>

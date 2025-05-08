@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllProperties } from "@/services/insurance.api";
 import { useState } from "react";
 import Link from "next/link";
-import { Plus, FolderX } from "lucide-react";
+import { Plus, FolderX, Loader2 } from "lucide-react";
 const ROWS_PER_PAGE = 10;
 
 export default function PropertiesPage() {
@@ -24,9 +24,17 @@ export default function PropertiesPage() {
       totalPages: 0,
     }),
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <Loader2 className="h-8 w-8 text-gray-600 animate-spin" />
+      </div>
+    );
+  }
   if (!data) {
     return (
-      <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+      <div className="min-h-screen flex gap-2 items-center justify-center py-10 bg-gray-100">
         <FolderX size={48} className="mb-4" />
         <p>No data available.</p>
       </div>
