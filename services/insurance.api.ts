@@ -49,9 +49,10 @@ export const updateClaimProgress = async ({
   id: string;
   claimProgress: "PENDING" | "COMPLETED" | "FAILED";
 }) => {
-  const response = await axios.patch(`${API_BASE_URL}/property/claim/${id}`, {
+  const response = await axios.put(`${API_BASE_URL}/client/update/${id}`, {
     claimProgress,
   });
   return response.data;
 };
+
 
