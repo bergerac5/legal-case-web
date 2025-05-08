@@ -64,19 +64,21 @@ export default function AddClientClaim() {
       dateOfClaim: new Date(formData.dateOfClaim).toISOString(),
     });
   };
+
+  // function to Decrease input box when needed
   const removeItem = (index: number) => {
-    if (formData.damagedItems.length === 1) return; // Prevent removing last item
+    if (formData.damagedItems.length === 1) return;
     const updatedItems = formData.damagedItems.filter((_, i) => i !== index);
     setFormData({ ...formData, damagedItems: updatedItems });
   };
   
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-10 rounded-md mt-10 shadow-md">
-      <h1 className="text-2xl font-bold text-center mb-6">Submit Insurance Claim</h1>
+    <div className="p-10 max-w-3xl mx-auto bg-white mt-10">
+      <h1 className="text-2xl font-bold text-center mb-6">Submit Insurance Client Claim</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Client Info */}
+        {/* Client Information */}
         <div className="space-y-4">
           <Input
             type="text"
@@ -108,7 +110,7 @@ export default function AddClientClaim() {
           />
         </div>
 
-        {/* Claim Info */}
+        {/* Claim Information */}
         <div className="space-y-4">
           <Input
             type="date"
@@ -133,14 +135,14 @@ export default function AddClientClaim() {
           />
         </div>
 
-        {/* Damaged Items */}
-<div className="space-y-2">
+        {/* Property claimed By Client */}
+   <div className="space-y-2">
   <label className="font-semibold">Damaged Items</label>
   {formData.damagedItems.map((item, index) => (
     <div key={index} className="flex items-center gap-2">
       <Input
         type="text"
-        placeholder="Item Name"
+        placeholder="Property Name"
         value={item.itemName}
         onChange={(e) => handleItemChange(index, e.target.value)}
         required

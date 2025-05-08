@@ -69,7 +69,7 @@ export default function AddProperty() {
             />
             <Input
               type="number"
-              placeholder="Price Property"
+              placeholder="Price Of Property"
               value={formData.price}
               onChange={(e) => handleChange("price", e.target.value)}
               required
@@ -88,6 +88,7 @@ export default function AddProperty() {
               onChange={(e) => handleChange("location", e.target.value)}
               required
             />
+            <label className="font-semibold">Date Of Bought</label>
             <Input
               type="Date"
               placeholder="Bought Date"
