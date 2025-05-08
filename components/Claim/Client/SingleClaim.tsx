@@ -66,9 +66,9 @@ export default function ClaimDetails() {
               onChange={handleStatusChange}
               disabled={mutation.isPending}
             >
-              <option value="PENDING">Pending</option>
-              <option value="COMPLETED">Completed</option>
-              <option value="FAILED">Failed</option>
+              <option value="PENDING">PENDING</option>
+              <option value="COMPLETED">COMPLATED</option>
+              <option value="FAILED">FAILED</option>
             </select>
           </div>
         </div>
