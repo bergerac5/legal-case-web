@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { addClientClaim } from "@/services/insurance.api";
 import Input from "@/components/UI/Input";
 import Button from "@/components/UI/Button";
+import { AxiosError } from "axios";
 
 export default function AddClientClaim() {
   const router = useRouter();
@@ -27,9 +28,11 @@ export default function AddClientClaim() {
 
   const addClaimMutation = useMutation({
     mutationFn: addClientClaim,
-    onSuccess: () => router.push("/claims"),
-    onError: (err: any) =>
-      setError(err?.response?.data?.message || "Failed to submit claim"),
+    onSuccess: () => router.push("/client-claims"),
+    onError: (error: AxiosError) => {
+          setError(
+            (error.response?.data as { message?: string })?.message || "Failed to add property.");
+        },
   });
 
   const handleClientChange = (field: string, value: string) => {
@@ -49,6 +52,7 @@ export default function AddClientClaim() {
     setFormData({ ...formData, damagedItems: updatedItems });
   };
 
+   // function to  increase input box when needed on
   const addNewItem = () => {
     setFormData({
       ...formData,
@@ -56,12 +60,16 @@ export default function AddClientClaim() {
     });
   };
 
+  // Function to Submit Data In Database
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addClaimMutation.mutate({
+    const clientClaimDetails = {
       ...formData,
       claimAmount: Number(formData.claimAmount),
       dateOfClaim: new Date(formData.dateOfClaim).toISOString(),
+    }
+    addClaimMutation.mutate({
+      ...clientClaimDetails
     });
   };
 
@@ -112,6 +120,7 @@ export default function AddClientClaim() {
 
         {/* Claim Information */}
         <div className="space-y-4">
+        <label className="font-semibold">Date Of Claim</label>
           <Input
             type="date"
             placeholder="Date of Claim"
@@ -119,12 +128,13 @@ export default function AddClientClaim() {
             onChange={(e) => handleChange("dateOfClaim", e.target.value)}
             required
           />
-          <Input
-            type="text"
-            placeholder="Description"
+          <textarea
+            required
+            placeholder="Describe the issue in detail..."
             value={formData.description}
             onChange={(e) => handleChange("description", e.target.value)}
-            required
+            rows={5}
+            className="w-full pl-10 pr-4 py-2 border border-gray-400 rounded-md focus:outline-none bg-gray-200 resize-none"
           />
           <Input
             type="number"
@@ -137,7 +147,7 @@ export default function AddClientClaim() {
 
         {/* Property claimed By Client */}
    <div className="space-y-2">
-  <label className="font-semibold">Damaged Items</label>
+  <label className="font-semibold">Damaged Properties</label>
   {formData.damagedItems.map((item, index) => (
     <div key={index} className="flex items-center gap-2">
       <Input
@@ -151,7 +161,7 @@ export default function AddClientClaim() {
         <button
           type="button"
           onClick={() => removeItem(index)}
-          className="text-red-600 font-bold text-xl px-2"
+          className="text-red-900 font-bold text-xl px-2 cursor-pointer"
           title="Remove Item"
         >
           -

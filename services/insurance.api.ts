@@ -75,7 +75,7 @@ export const updateClaimProgress = async ({
 
 //Adding Claim Of Client Api Call 
 export const addClientClaim = async (clientclaim: CreateFullClaimDto) => {
-  const response = await axios.post(`${API_BASE_URL}/claim/client`, clientclaim);
+  const response = await axios.post(`${API_BASE_URL}/client/claim`, clientclaim);
   return response.data;
 };
 

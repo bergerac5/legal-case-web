@@ -24,7 +24,7 @@ export default function ClaimForm() {
         claimProgress: "PENDING",
         dateOfClaim: new Date().toISOString(), // auto-generated timestamp
         description,
-        claimAmount: Number(claimAmount), // convert to number
+        claimAmount: Number(claimAmount)
       });
       alert("Claim submitted!");
       router.push("/property-claim");
@@ -69,7 +69,7 @@ export default function ClaimForm() {
         {/* Estimated Amount */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
-            Estimated Claim Amount (USD)
+            Estimated Claim Amount (RWF)
           </label>
           <Input
             type="number"
@@ -91,7 +91,7 @@ export default function ClaimForm() {
             placeholder="Describe the issue in detail..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full border border-gray-300 rounded px-4 py-2"
+            className="w-full pl-10 pr-4 py-2 border border-gray-400 rounded-md focus:outline-none bg-gray-200 resize-none"
             rows={5}
           />
         </div>

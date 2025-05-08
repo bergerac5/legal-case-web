@@ -29,7 +29,7 @@ export default function PropertyClaimDetails() {
       setTimeout(() => setMessage(null), 3000); // auto hide notification message after 3 sec
     },
     onError: () => {
-      setMessage({ type: "error", text: "Failed to update claim status." });
+      setMessage({ type: "error", text: "Failed to update claim Progress." });
       setTimeout(() => setMessage(null), 3000);
     },
   });

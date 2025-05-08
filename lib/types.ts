@@ -58,29 +58,7 @@ export interface CreatePropertyInput {
       location: string;
     };
   }
-  
-  export interface Client {
-    names: string;
-    poc: string;
-    phoneNumber: string;
-    address: string;
-  }
-  
-  export interface DamageDetail {
-    itemName: string;
-  }
-  
-  export interface ClientClaim {
-    id: string;
-    type: string;
-    claimProgress: string;
-    claimAmount: number;
-    dateOfClaim: string;
-    description: string;
-    client: Client;
-    damageDetails: DamageDetail[];
-  }
-  
+
   export interface PaginatedClientClaimResponse {
     data: ClientClaim[];
     total: number;
@@ -114,7 +92,7 @@ export interface ClientInfo {
   address: string;
 }
 
-export interface ClientClaimPayload {
+export interface CreateFullClaimDto {
   client: ClientInfo;
   type: "Client";
   claimProgress: "PENDING";
