@@ -5,7 +5,8 @@ import {
   PaginatedResponse, 
   PaginatedClaimResponse, 
   ClaimPropertyInput,  
-  PaginatedClientClaimResponse 
+  PaginatedClientClaimResponse, 
+  ClientClaim
 } from "../lib/types"
 
 export const getAllProperties = async (page: number): Promise<PaginatedResponse> => {
@@ -36,4 +37,8 @@ export const getAllPropertyClaims = async (page: number): Promise<PaginatedClaim
 export async function getAllClientClaims(page: number): Promise<PaginatedClientClaimResponse> {
   const res = await axios.get(`${API_BASE_URL}/client/claims?page=${page}`);
   return res.data;
+}
+export async function getClaimById(id: string): Promise<ClientClaim> {
+  const response = await axios.get(`${API_BASE_URL}/client/${id}`);
+  return response.data;
 }

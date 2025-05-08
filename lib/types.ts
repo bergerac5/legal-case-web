@@ -88,3 +88,19 @@ export interface CreatePropertyInput {
     totalPages: number;
   }
   
+  export interface ClientClaim {
+    claimId: string;
+    type: string;
+    claimProgress:string;
+    dateOfClaim: string;
+    description: string;
+    claimAmount: number;
+    damagedItems: { id: string; itemName: string; claim_id: string }[];
+    client: {
+      names: string;
+      poc: string;
+      phoneNumber: string;
+      address: string;
+    };
+  }
+   
