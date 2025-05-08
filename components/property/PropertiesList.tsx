@@ -1,10 +1,9 @@
 "use client";
-
 import { useQuery } from "@tanstack/react-query";
 import { getAllProperties } from "@/services/insurance.api";
 import { useState } from "react";
 import Link from "next/link";
-import { Plus, FolderX, Loader2 } from "lucide-react";
+import {FolderX, Loader2 } from "lucide-react";
 const ROWS_PER_PAGE = 10;
 
 export default function PropertiesPage() {
@@ -48,9 +47,7 @@ export default function PropertiesPage() {
         <h1 className="text-2xl font-bold text-center mb-6">List Of Available Property</h1>
         <Link href="/add-property">
           <button className="bg-pink-800 text-white py-2 px-6 rounded-md hover:bg-pink-900 cursor-pointer">
-          <p className="flex">
-          <Plus size={16} /> Add Property
-          </p>
+          + Add Property
           </button>
         </Link>
       </div>

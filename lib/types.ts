@@ -103,4 +103,26 @@ export interface CreatePropertyInput {
       address: string;
     };
   }
+export interface DamagedItem {
+  itemName: string;
+}
+
+export interface ClientInfo {
+  names: string;
+  poc: string;
+  phoneNumber: string;
+  address: string;
+}
+
+export interface ClientClaimPayload {
+  client: ClientInfo;
+  type: "Client";
+  claimProgress: "PENDING";
+  dateOfClaim: string;
+  description: string;
+  claimAmount: number;
+  damagedItems: DamagedItem[];
+}
+
+  
    

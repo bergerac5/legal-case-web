@@ -6,7 +6,8 @@ import {
   PaginatedClaimResponse, 
   ClaimPropertyInput,  
   PaginatedClientClaimResponse, 
-  ClientClaim
+  ClientClaim,
+  CreateFullClaimDto
 } from "../lib/types"
 
 //Get all Properties Api Call
@@ -69,6 +70,12 @@ export const updateClaimProgress = async ({
   const response = await axios.put(`${API_BASE_URL}/client/update/${id}`, {
     claimProgress,
   });
+  return response.data;
+};
+
+//Adding Claim Of Client Api Call 
+export const addClientClaim = async (clientclaim: CreateFullClaimDto) => {
+  const response = await axios.post(`${API_BASE_URL}/claim/client`, clientclaim);
   return response.data;
 };
 
