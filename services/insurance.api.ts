@@ -38,7 +38,20 @@ export async function getAllClientClaims(page: number): Promise<PaginatedClientC
   const res = await axios.get(`${API_BASE_URL}/client/claims?page=${page}`);
   return res.data;
 }
-export async function getClaimById(id: string): Promise<ClientClaim> {
+export async function getClaimClaimById(id: string): Promise<ClientClaim> {
   const response = await axios.get(`${API_BASE_URL}/client/${id}`);
   return response.data;
 }
+export const updateClaimProgress = async ({
+  id,
+  claimProgress,
+}: {
+  id: string;
+  claimProgress: "PENDING" | "COMPLETED" | "FAILED";
+}) => {
+  const response = await axios.patch(`${API_BASE_URL}/property/claim/${id}`, {
+    claimProgress,
+  });
+  return response.data;
+};
+

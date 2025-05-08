@@ -1,5 +1,5 @@
+import SingleClaimDetails from '@/components/Claim/Client/SingleClaim'
 import Navbar from '@/components/Navbar/NavBar'
-import PropertyDetails from '@/components/property/SingleProperty'
 import React from 'react'
 
 const SinglePropertyPage = () => {
@@ -7,7 +7,7 @@ const SinglePropertyPage = () => {
     <div>
            <div>
           <Navbar/>
-            <PropertyDetails/>
+            <SingleClaimDetails/>
         </div>
         </div>
   )

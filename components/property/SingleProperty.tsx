@@ -42,7 +42,7 @@ export default function PropertyDetails() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
           <div><strong>Name:</strong> {property.name}</div>
-          <div><strong>Price:</strong> ${property.price}</div>
+          <div><strong>Price:</strong> {property.price} RWF</div>
           <div><strong>Department:</strong> {property.department}</div>
           <div><strong>Location:</strong> {property.location}</div>
           <div><strong>Bought Time:</strong> {new Date(property.boughtTime).toLocaleDateString()}</div>

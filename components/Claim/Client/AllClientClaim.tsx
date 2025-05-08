@@ -66,7 +66,7 @@ export default function ClientsClaims() {
       <td className="p-2">{claim.client[0]?.poc}</td>
       <td className="p-2">{claim.client[0]?.address}</td>
       <td className="p-2">{claim.claimProgress}</td>
-      <td className="p-2">${claim.claimAmount}</td>
+      <td className="p-2">{claim.claimAmount} RWF</td>
       <td className="p-2">{new Date(claim.dateOfClaim).toLocaleDateString()}</td>
       <td className="p-2 max-w-xs truncate">{claim.description}</td>
       <td className="p-2">
@@ -80,9 +80,8 @@ export default function ClientsClaims() {
         </Link>
       </td>
     </tr>
-  ))}
-</tbody>
-
+    ))}
+   </tbody>
           </table>
 
           {/* Pagination Controls */}

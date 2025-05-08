@@ -76,7 +76,7 @@ export default function PropertiesPage() {
                 >
                   <td className="p-2">{String((page - 1) * ROWS_PER_PAGE + index + 1).padStart(3, "0")}</td>
                   <td className="p-2">{property.name}</td>
-                  <td className="p-2">${property.price}</td>
+                  <td className="p-2">{property.price} RWF</td>
                   <td className="p-2">{property.department}</td>
                   <td className="p-2">{property.location}</td>
                   <td className="p-2">{new Date(property.boughtTime).toLocaleDateString()}</td>

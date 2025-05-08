@@ -1,5 +1,4 @@
 "use client";
-
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getAllPropertyClaims } from "@/services/insurance.api";
@@ -91,7 +90,7 @@ export default function PropertiesClaim() {
                   <td className="p-2">{claim.property.location}</td>
                   <td className="p-2">{claim.type}</td>
                   <td className="p-2">{claim.claimProgress}</td>
-                  <td className="p-2">${claim.claimAmount}</td>
+                  <td className="p-2">{claim.claimAmount} RWF</td>
                   <td className="p-2">{new Date(claim.dateOfClaim).toLocaleDateString()}</td>
                   <td className="p-2 max-w-xs truncate">{claim.description}</td>
                   <td className="p-2">
