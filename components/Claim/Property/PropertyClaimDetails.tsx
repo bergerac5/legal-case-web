@@ -114,17 +114,23 @@ export default function PropertyClaimDetails() {
           <div>
   <h2 className="text-xl font-semibold mb-2">Result On Claim</h2>
   {claim.result ? (
-    <div className="space-y-1 text-gray-700">
-      <p><strong>Decision:</strong> {claim.result.decision}</p>
-      <p><strong>Reason:</strong> {claim.result.reason || claim.result.reson}</p>
-      <p><strong>Amount Approved:</strong> {claim.result.amountApproved} RWF</p>
-      <p><strong>Resolved At:</strong> {new Date(claim.result.reviewedAt || '').toLocaleDateString()}</p>
-    </div>
-  ) : (
-    <p className="text-sm text-gray-500 italic">
-      No result has been added to this claim yet.
+  <div className="space-y-1 text-gray-700">
+    <p><strong>Decision:</strong> {claim.result.decision}</p>
+    <p><strong>Reason:</strong> {claim.result.reason}</p>
+    <p><strong>Amount Approved:</strong> {claim.result.amountApproved ?? "N/A"} RWF</p>
+    <p>
+      <strong>Resolved At:</strong>{" "}
+      {claim.result.reviewedAt
+        ? new Date(claim.result.reviewedAt).toLocaleDateString()
+        : "Not reviewed yet"}
     </p>
-  )}
+  </div>
+) : (
+  <p className="text-sm text-gray-500 italic">
+    No result has been added to this claim yet.
+  </p>
+)}
+
 </div>
 
           </div>

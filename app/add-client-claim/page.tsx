@@ -1,4 +1,4 @@
-import AddClientClaim from '@/components/Claim/Client/Add ClientClaim'
+import AddClientClaim from '@/components/Claim/Client/AddClientClaim'
 import Navbar from '@/components/Navbar/NavBar'
 import React from 'react'
 
