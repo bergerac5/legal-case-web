@@ -37,13 +37,13 @@ export default function InsuranceClaim() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {/* REG Claims Summary */}
         <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-2">REG Property Claims</h2>
-          <p className="text-sm text-gray-600 mb-4">Overview of REG-submitted property claims</p>
+          <h2 className="text-lg font-semibold mb-2">REG Insurance Claims</h2>
+          <p className="text-sm text-gray-600 mb-4">Overview of REG-submitted Insurance claims</p>
           <ul className="space-y-1 text-sm">
-            <li>Total: <span className="font-semibold">{summary.REG.total}</span></li>
-            <li>Pending: <span className="font-semibold">{summary.REG.pending}</span></li>
-            <li>Completed: <span className="font-semibold">{summary.REG.completed}</span></li>
-            <li>Failed: <span className="font-semibold">{summary.REG.failed}</span></li>
+            <li><strong>Total:</strong> <span className="text-gray-700">{summary.REG.total}</span></li>
+            <li><strong>Pending:</strong> <span className="text-gray-700">{summary.REG.pending}</span></li>
+            <li><strong>Completed:</strong> <span className="text-gray-700">{summary.REG.completed}</span></li>
+            <li><strong>Failed:</strong> <span className="text-gray-700">{summary.REG.failed}</span></li>
           </ul>
           <Link
             href="/property-claims"
@@ -56,12 +56,12 @@ export default function InsuranceClaim() {
         {/* Client Claims Summary */}
         <div className="bg-green-50 border border-green-200 p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold mb-2">Client Insurance Claims</h2>
-          <p className="text-sm text-gray-600 mb-4">Overview of claims filed by clients</p>
+          <p className="text-sm text-gray-600 mb-4">Overview of Client-submitted Insurance Claims</p>
           <ul className="space-y-1 text-sm">
-            <li>Total: <span className="font-semibold">{summary.Client.total}</span></li>
-            <li>Pending: <span className="font-semibold">{summary.Client.pending}</span></li>
-            <li>Completed: <span className="font-semibold">{summary.Client.completed}</span></li>
-            <li>Failed: <span className="font-semibold">{summary.Client.failed}</span></li>
+            <li><strong>Total:</strong> <span className="text-gray-700">{summary.Client.total}</span></li>
+            <li><strong>Pending:</strong> <span className="text-gray-700">{summary.Client.pending}</span></li>
+            <li><strong>Completed:</strong> <span className="text-gray-700">{summary.Client.completed}</span></li>
+            <li><strong>Failed:</strong> <span className="text-gray-700">{summary.Client.failed}</span></li>
           </ul>
           <Link
             href="/client-claims"
