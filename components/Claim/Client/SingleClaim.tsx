@@ -94,21 +94,6 @@ export default function ClaimDetails() {
             </select>
           </div>
         </div>
-
-        {/* Damaged Items */}
-        <div className="pt-6">
-          <h2 className="text-xl font-semibold mb-2">Properties Claimed By Client</h2>
-          {claim.damagedItems?.length > 0 ? (
-            <ul className="list-disc pl-5 text-gray-700">
-              {claim.damagedItems.map((item) => (
-                <li key={item.id}>{item.itemName}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-gray-500">No damaged items listed.</p>
-          )}
-        </div>
-
         {/* Client Info & Result Side-by-Side */}
         <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Client Info */}
@@ -123,27 +108,42 @@ export default function ClaimDetails() {
           </div>
 
           {/* Result On Claim */}
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Result On Claim</h2>
-            {claim.result ? (
-              <div className="space-y-1 text-gray-700">
-                <p><strong>Decision:</strong> {claim.result.decision}</p>
-                <p><strong>Reason:</strong> {claim.result.reason}</p>
-                <p><strong>Amount Approved:</strong> {claim.result.amountApproved} RWF</p>
-                <p><strong>Resolved At:</strong> {new Date(claim.result.createdAt).toLocaleDateString()}</p>
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 italic">
-                No result has been added to this claim yet.
-              </p>
-            )}
-          </div>
-        </div>
+     
+     {/* Result On Claim */}
+<div>
+  <h2 className="text-xl font-semibold mb-2">Result On Claim</h2>
+  {claim.result ? (
+    <div className="space-y-1 text-gray-700">
+      <p><strong>Decision:</strong> {claim.result.decision}</p>
+      <p><strong>Reason:</strong> {claim.result.reason || claim.result.reson}</p>
+      <p><strong>Resolved At:</strong> {new Date(claim.result.reviewedAt || '').toLocaleDateString()}</p>
+    </div>
+  ) : (
+    <p className="text-sm text-gray-500 italic">
+      No result has been added to this claim yet.
+    </p>
+  )}
+</div>
 
+         </div>
+   
+   {/* Damaged Items */}
+   <div className="pt-6">
+          <h2 className="text-xl font-semibold mb-2">Properties Claimed By Client</h2>
+          {claim.damagedItems?.length > 0 ? (
+            <ul className="list-disc pl-5 text-gray-700">
+              {claim.damagedItems.map((item) => (
+                <li key={item.id}>{item.itemName}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500">No damaged items listed.</p>
+          )}
+        </div>
         {/* View Result Button */}
-        <div className="pt-6 flex justify-end">
+        <div className="pt-6 text-center">
           <Link
-            href={`/add-result`}
+            href={"/add-result"}
             className="inline-block bg-pink-800 hover:bg-pink-900 text-white font-medium py-2 px-4 rounded-md transition duration-200"
           >
             Add Result On This Claim

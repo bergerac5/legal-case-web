@@ -69,7 +69,7 @@ export interface CreatePropertyInput {
   export interface ClientClaim {
     claimId: string;
     type: string;
-    claimProgress:string;
+    claimProgress: string;
     dateOfClaim: string;
     description: string;
     claimAmount: number;
@@ -80,7 +80,14 @@ export interface CreatePropertyInput {
       phoneNumber: string;
       address: string;
     };
+    result?: {
+      decision: string;
+      reason: string;
+      amountApproved: number;
+      reviewedAt: string;
+    };
   }
+  
 export interface DamagedItem {
   itemName: string;
 }

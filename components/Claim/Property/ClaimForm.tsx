@@ -1,5 +1,4 @@
 "use client";
-
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { claimProperty } from "@/services/insurance.api";

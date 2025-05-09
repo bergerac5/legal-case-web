@@ -97,7 +97,8 @@ export default function PropertyClaimDetails() {
           </div>
         </div>
 
-        <div className="pt-6">
+        <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
           <h2 className="text-xl font-semibold mb-2">Property Info</h2>
           <div className="space-y-1 text-gray-700">
             <p><strong>Name:</strong> {claim.property?.name}</p>
@@ -109,16 +110,34 @@ export default function PropertyClaimDetails() {
             <p><strong>Supplier:</strong> {claim.property?.supplier}</p>
             <p><strong>Manufacturer:</strong> {claim.property?.manufacturer}</p>
           </div>
+          </div>
+          <div>
+  <h2 className="text-xl font-semibold mb-2">Result On Claim</h2>
+  {claim.result ? (
+    <div className="space-y-1 text-gray-700">
+      <p><strong>Decision:</strong> {claim.result.decision}</p>
+      <p><strong>Reason:</strong> {claim.result.reason || claim.result.reson}</p>
+      <p><strong>Amount Approved:</strong> {claim.result.amountApproved} RWF</p>
+      <p><strong>Resolved At:</strong> {new Date(claim.result.reviewedAt || '').toLocaleDateString()}</p>
+    </div>
+  ) : (
+    <p className="text-sm text-gray-500 italic">
+      No result has been added to this claim yet.
+    </p>
+  )}
+</div>
+
+          </div>
+          
           {/* Result Button */}
-        <div className="pt-6 flex justify-end">
+        <div className="pt-6 text-center">
           <Link
-            href={`/result/${claim.claimId}`}
+            href={"/add-result"}
             className="inline-block bg-pink-800 hover:bg-pink-900  text-white font-medium py-2 px-4 rounded-md transition duration-200"
           >
-            View Result of This Claim
+            Add Result On This Claim
           </Link>
           </div>
-        </div>
       </div>
     </div>
   );
