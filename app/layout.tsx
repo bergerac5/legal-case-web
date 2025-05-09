@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Legol Case",
+  title: "Legal Case",
   description: "Legal Case Management",
 };
 
@@ -20,15 +20,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-     <html lang="en">
-     <body className={`${inter.className} $ antialiased`}>
-       <AuthProvider>
-         <Providers>{children}</Providers> {/* React Query Provider */}
-       </AuthProvider>
-       <footer className="mt-12 pt-6 text-center text-sm text-gray-500 mb-0">
-  © {new Date().getFullYear()} Rwanda Energy Group (REG) – All rights reserved.  
-</footer>
-     </body>
-   </html>
+    <html lang="en">
+      <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
+        <AuthProvider>
+          <Providers>
+            <main className="flex-1">{children}</main>
+          </Providers>
+        </AuthProvider>
+        <footer className="pt-6 text-center text-sm text-gray-500">
+          © {new Date().getFullYear()} Rwanda Energy Group (REG) – All rights reserved.
+        </footer>
+      </body>
+    </html>
   );
 }
