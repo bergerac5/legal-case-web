@@ -102,5 +102,20 @@ export interface CreateFullClaimDto {
   damagedItems: DamagedItem[];
 }
 
+export interface ClaimSummary {
+  Client: {
+    pending: number;
+    completed: number;
+    failed: number;
+    total: number;
+  };
+  REG: {
+    pending: number;
+    completed: number;
+    failed: number;
+    total: number;
+  };
+}
+
   
    

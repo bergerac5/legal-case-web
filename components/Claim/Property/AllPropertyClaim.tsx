@@ -4,31 +4,7 @@ import { useState } from "react";
 import { getAllPropertyClaims } from "@/services/insurance.api";
 import { FolderX, Loader2} from "lucide-react";
 import Link from "next/link";
-
-// Define the types
-interface Property {
-  id: string;
-  name: string;
-  department: string;
-  location: string;
-}
-
-interface InsuranceClaim {
-  id: string;
-  type: string;
-  claimProgress: string;
-  claimAmount: number;
-  dateOfClaim: string;
-  description: string;
-  property: Property;
-}
-
-interface PaginatedClaimResponse {
-  data: InsuranceClaim[];
-  total: number;
-  page: number;
-  totalPages: number;
-}
+import { PaginatedClaimResponse } from "@/lib/types";
 
 const ROWS_PER_PAGE = 10;
 
