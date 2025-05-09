@@ -147,8 +147,9 @@ export default function ClaimDetails() {
           )}
         </div>
         {/* View Result Button */}
+        
         {!claim.result && (
-  <div className="pt-6 text-center">
+       <div className="pt-6 text-center">
     <Link
       href={"/add-result"}
       className="inline-block bg-pink-800 hover:bg-pink-900 text-white font-medium py-2 px-4 rounded-md transition duration-200"
