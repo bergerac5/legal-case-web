@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { getSinglePropertyClaim, updateClaimProgress } from "@/services/insurance.api";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function PropertyClaimDetails() {
   const { id } = useParams();
@@ -107,6 +108,15 @@ export default function PropertyClaimDetails() {
             <p><strong>Property Value:</strong> {claim.property?.price} RWF</p>
             <p><strong>Supplier:</strong> {claim.property?.supplier}</p>
             <p><strong>Manufacturer:</strong> {claim.property?.manufacturer}</p>
+          </div>
+          {/* Result Button */}
+        <div className="pt-6 flex justify-end">
+          <Link
+            href={`/result/${claim.claimId}`}
+            className="inline-block bg-pink-800 hover:bg-pink-900  text-white font-medium py-2 px-4 rounded-md transition duration-200"
+          >
+            View Result of This Claim
+          </Link>
           </div>
         </div>
       </div>

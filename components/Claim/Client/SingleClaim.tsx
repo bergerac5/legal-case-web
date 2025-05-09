@@ -4,6 +4,8 @@ import { useParams } from "next/navigation";
 import { getClaimClaimById, updateClaimProgress } from "@/services/insurance.api";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
+
 export default function ClaimDetails() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const { id } = useParams();
@@ -24,7 +26,7 @@ export default function ClaimDetails() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["claim", id] });
       setMessage({ type: "success", text: "Claim Progress updated successfully!" });
-      setTimeout(() => setMessage(null), 3000); // auto hide notification message after 3 sec
+      setTimeout(() => setMessage(null), 3000);
     },
     onError: () => {
       setMessage({ type: "error", text: "Failed to update claim status." });
@@ -59,6 +61,7 @@ export default function ClaimDetails() {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-white p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8 space-y-6">
         <h1 className="text-3xl font-bold text-gray-800">Client Claim Details</h1>
+
         {message && (
           <div
             className={`p-3 rounded text-sm font-medium ${
@@ -70,15 +73,16 @@ export default function ClaimDetails() {
             {message.text}
           </div>
         )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
           <div><strong>Type:</strong> {claim.type} Properties</div>
           <div><strong>Date of Claim:</strong> {new Date(claim.dateOfClaim).toLocaleDateString()}</div>
           <div><strong>Description:</strong> {claim.description}</div>
-          <div><strong>Claim Amount:</strong>{claim.claimAmount} RWF</div>
-
+          <div><strong>Claim Amount:</strong> {claim.claimAmount} RWF</div>
           <div>
-          <label htmlFor="progress"> <strong>Progress:</strong></label>
-            <select id="progress"
+            <label htmlFor="progress"><strong>Progress:</strong></label>
+            <select
+              id="progress"
               className="ml-2 p-1 border rounded"
               value={claim.claimProgress}
               onChange={handleStatusChange}
@@ -112,6 +116,16 @@ export default function ClaimDetails() {
           ) : (
             <p className="text-sm text-gray-500">No damaged items listed.</p>
           )}
+        </div>
+
+        {/* Result Button */}
+        <div className="pt-6 flex justify-end">
+          <Link
+            href={`/result/${claim.claimId}`}
+            className="inline-block bg-pink-800 hover:bg-pink-900  text-white font-medium py-2 px-4 rounded-md transition duration-200"
+          >
+            View Result of This Claim
+          </Link>
         </div>
       </div>
     </div>
