@@ -123,6 +123,13 @@ export interface ClaimSummary {
     total: number;
   };
 }
+export interface AddClaimResultInput {
+  claimId: string;
+  decision: string;
+  reason: string;
+  amountApproved: number;
+}
+
 
   
    
