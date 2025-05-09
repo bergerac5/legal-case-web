@@ -90,6 +90,6 @@ export async function getClaimSummary(): Promise<ClaimSummary> {
 //add result on claim
 
 export const addClaimResult = async (data: AddClaimResultInput) => {
-  const response = await axios.post(`${API_BASE_URL}/result`, data);
+  const response = await axios.post(`${API_BASE_URL}/client/result`, data);
   return response.data;
 };
