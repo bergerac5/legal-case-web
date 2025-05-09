@@ -25,7 +25,7 @@ export default function AddResultForm() {
       };
       await addClaimResult(payload);
       alert("Claim result added successfully!");
-      router.push("/insurance-claims");
+      router.push(`/result/${id}/add-result`);
     } catch (err) {
       console.error(err);
       alert("Failed to submit result.");
@@ -41,7 +41,7 @@ export default function AddResultForm() {
         className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-xl space-y-6"
       >
         <h1 className="text-2xl font-bold text-center text-gray-800">
-          Submit Claim Result
+          Submit Result On Claim
         </h1>
         <p className="text-center text-sm text-gray-500 mb-2">
           Claim ID: <span className="font-medium">{id}</span>
@@ -99,7 +99,7 @@ export default function AddResultForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-700 text-white py-2 px-6 rounded-md hover:bg-green-800"
+          className="w-full bg-pink-800 text-white py-2 px-6 rounded-md hover:bg-pink-900 cursor-pointer"
         >
           {loading ? "Submitting Result..." : "Submit Result"}
         </button>

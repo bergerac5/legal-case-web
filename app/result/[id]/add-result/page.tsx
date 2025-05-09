@@ -1,8 +1,15 @@
+import Navbar from '@/components/Navbar/NavBar'
+import AddResultForm from '@/components/Result/ResultForm'
 import React from 'react'
 
 const AddResultPage = () => {
   return (
-    <div>AddResultPage</div>
+    <div>
+     <div>
+     <Navbar/>
+        <AddResultForm/>          
+      </div>
+      </div>
   )
 }
 
