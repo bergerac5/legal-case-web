@@ -25,8 +25,7 @@ export default function ClaimForm() {
         description,
         claimAmount: Number(claimAmount)
       });
-      alert("Claim submitted!");
-      router.push("/property-claim");
+      router.push("/property-claims");
     } catch (err) {
       console.error(err);
       alert("Submission failed.");
