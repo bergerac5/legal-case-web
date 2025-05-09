@@ -95,16 +95,7 @@ export default function ClaimDetails() {
           </div>
         </div>
 
-        <div className="pt-6">
-          <h2 className="text-xl font-semibold mb-2">Client Info</h2>
-          <div className="space-y-1 text-gray-700">
-            <p><strong>Name:</strong> {claim.client?.names}</p>
-            <p><strong>Phone:</strong> {claim.client?.phoneNumber}</p>
-            <p><strong>POC:</strong> {claim.client?.poc}</p>
-            <p><strong>Address:</strong> {claim.client?.address}</p>
-          </div>
-        </div>
-
+        {/* Damaged Items */}
         <div className="pt-6">
           <h2 className="text-xl font-semibold mb-2">Properties Claimed By Client</h2>
           {claim.damagedItems?.length > 0 ? (
@@ -118,13 +109,44 @@ export default function ClaimDetails() {
           )}
         </div>
 
-        {/* Result Button */}
+        {/* Client Info & Result Side-by-Side */}
+        <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Client Info */}
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Client Info</h2>
+            <div className="space-y-1 text-gray-700">
+              <p><strong>Name:</strong> {claim.client?.names}</p>
+              <p><strong>Phone:</strong> {claim.client?.phoneNumber}</p>
+              <p><strong>POC:</strong> {claim.client?.poc}</p>
+              <p><strong>Address:</strong> {claim.client?.address}</p>
+            </div>
+          </div>
+
+          {/* Result On Claim */}
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Result On Claim</h2>
+            {claim.result ? (
+              <div className="space-y-1 text-gray-700">
+                <p><strong>Decision:</strong> {claim.result.decision}</p>
+                <p><strong>Reason:</strong> {claim.result.reason}</p>
+                <p><strong>Amount Approved:</strong> {claim.result.amountApproved} RWF</p>
+                <p><strong>Resolved At:</strong> {new Date(claim.result.createdAt).toLocaleDateString()}</p>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 italic">
+                No result has been added to this claim yet.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* View Result Button */}
         <div className="pt-6 flex justify-end">
           <Link
-            href={`/result/${claim.claimId}`}
-            className="inline-block bg-pink-800 hover:bg-pink-900  text-white font-medium py-2 px-4 rounded-md transition duration-200"
+            href={`/add-result`}
+            className="inline-block bg-pink-800 hover:bg-pink-900 text-white font-medium py-2 px-4 rounded-md transition duration-200"
           >
-            View Result of This Claim
+            Add Result On This Claim
           </Link>
         </div>
       </div>
