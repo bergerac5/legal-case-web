@@ -4,14 +4,14 @@ import { useState } from "react";
 import { getAllClientClaims } from "@/services/insurance.api";
 import { FolderX, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { PaginatedClientClaimResponse } from "@/lib/types";
+//import { PaginatedClientClaimResponse } from "@/lib/types";
 
 const ROWS_PER_PAGE = 10;
 
 export default function ClientsClaims() {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, error } = useQuery<PaginatedClientClaimResponse>({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["client-claims", page],
     queryFn: () => getAllClientClaims(page),
     placeholderData: () => ({

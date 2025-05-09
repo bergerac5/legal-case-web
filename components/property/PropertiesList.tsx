@@ -35,7 +35,7 @@ export default function PropertiesPage() {
     return (
       <div className="min-h-screen flex gap-2 items-center justify-center py-10 bg-gray-100">
         <FolderX size={48} className="mb-4" />
-        <p>No data available.</p>
+        <p>No Properties available.</p>
       </div>
     );
   }
