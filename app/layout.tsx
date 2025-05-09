@@ -25,7 +25,7 @@ export default function RootLayout({
        <AuthProvider>
          <Providers>{children}</Providers> {/* React Query Provider */}
        </AuthProvider>
-       <footer className="mt-12 pt-6 text-center text-sm text-gray-500">
+       <footer className="mt-12 pt-6 text-center text-sm text-gray-500 mb-0">
   © {new Date().getFullYear()} Rwanda Energy Group (REG) – All rights reserved.  
 </footer>
      </body>
