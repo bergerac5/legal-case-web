@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { AuthProvider } from "@/context/AuthContex";
+import { Toaster } from "react-hot-toast"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -10,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Legol Case",
+  title: "Legal Case",
   description: "Legal Case Management",
 };
 
@@ -24,6 +25,7 @@ export default function RootLayout({
      <body className={`${inter.className} $ antialiased`}>
        <AuthProvider>
          <Providers>{children}</Providers> {/* React Query Provider */}
+         <Toaster position="top-right" />
        </AuthProvider>
      </body>
    </html>
