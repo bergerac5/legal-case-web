@@ -67,7 +67,7 @@ export default function PropertiesClaim() {
               {data.data.map((claim, index) => (
                 <tr
                   key={claim.id}
-                  className={`${index % 2 === 0 ? "bg-white" : "bg-gray-100"} text-center border-t`}
+                  className={`${index % 2 === 0 ? "bg-white" : "bg-gray-100"} border-t`}
                 >
                   <td className="p-2">{String((page - 1) * ROWS_PER_PAGE + index + 1).padStart(3, "0")}</td>
                   <td className="p-2">{claim.property.name}</td>
