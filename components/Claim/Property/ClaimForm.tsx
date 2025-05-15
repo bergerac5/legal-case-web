@@ -61,14 +61,11 @@ export default function ClaimForm() {
 
   return (
     <div className="p-10 max-w-3xl mx-auto bg-white mt-10 shadow rounded-lg">
-      <form
+      <h1 className="text-2xl font-bold text-center text-gray-800"> Submit a Property Claim </h1>
+       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-xl space-y-6"
+         className="space-y-6"
       >
-        <h1 className="text-2xl font-bold text-center text-gray-800">
-          Submit a Property Claim
-        </h1>
-
         <p className="text-center text-sm text-gray-500 mb-2">
           Property ID: <span className="font-medium">{id}</span>
         </p>
