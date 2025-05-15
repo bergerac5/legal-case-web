@@ -71,7 +71,7 @@ export default function AddProperty() {
   };
 
   return (
-    <div className="p-10 max-w-3xl mx-auto bg-white mt-10">
+    <div className="p-10 max-w-3xl mx-auto bg-white mt-10 shadow rounded-lg">
       <h1 className="text-2xl font-bold text-center mb-6">Register Property</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
