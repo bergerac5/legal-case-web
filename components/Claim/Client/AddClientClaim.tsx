@@ -240,7 +240,7 @@ onError: (error: AxiosError) => {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-4 py-2 bg-gray-200 rounded"
+            className="px-4 py-2 bg-gray-200 rounded cursor-pointer"
           >
             Cancel
           </button>
