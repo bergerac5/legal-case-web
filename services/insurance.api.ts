@@ -77,8 +77,14 @@ export const updateClaimProgress = async ({
 
 //Adding Claim Of Client Api Call 
 export const addClientClaim = async (clientclaim: CreateFullClaimDto) => {
-  const response = await axios.post(`${API_BASE_URL}/client/claim`, clientclaim);
-  return response.data;
+  try {
+    const response = await axios.post(`${API_BASE_URL}/client/claim`, clientclaim);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      throw error.response.data;
+    }
+  }
 };
 
 // Get Claim Summary (REG and Client totals)
