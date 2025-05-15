@@ -10,7 +10,6 @@ const ROWS_PER_PAGE = 10;
 
 export default function ClientsClaims() {
   const [page, setPage] = useState(1);
-
   const { data, isLoading, error } = useQuery({
     queryKey: ["client-claims", page],
     queryFn: () => getAllClientClaims(page),
@@ -41,8 +40,17 @@ export default function ClientsClaims() {
 
   return (
     <div className="p-6">
+      <div className="flex justify-between items-center mb-4">
       <h1 className="text-2xl font-bold text-center mb-6">Client Insurance Claims</h1>
-
+       <Link href="/insurance-management">
+          <button
+            type="button"
+            className="px-4 py-2 bg-gray-200 rounded cursor-pointer"
+          >
+            Back
+          </button>
+        </Link>
+        </div>
       {isLoading ? (
         <p>Loading...</p>
       ) : error ? (
