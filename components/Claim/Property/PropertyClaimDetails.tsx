@@ -1,6 +1,6 @@
 "use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
 import { getSinglePropertyClaim, updateClaimProgress } from "@/services/insurance.api";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import Link from "next/link";
 
 export default function PropertyClaimDetails() {
   const { id } = useParams();
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -133,6 +134,15 @@ export default function PropertyClaimDetails() {
 
 </div>
 </div>
+<div className="flex justify-end items-center gap-4 pt-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-gray-200 rounded cursor-pointer"
+          >
+            Back
+          </button>
+          </div>
      {/* Result Button */}
      {!claim.result && (
   <div className="pt-6 text-center">
