@@ -36,13 +36,12 @@ export default function AddClientClaim() {
     setErrors({ general: data.message || "An error occurred" });
   }
 },
+
 onError: (error: AxiosError) => {
-  const response = error.response?.data as any;
-  if (response?.message) {
-    setErrors({ general: response.message });
-  } else {
-    setErrors({ general: "Failed to add claim. Please try again." });
-  }
+  const message = (error.response?.data as { message?: string })?.message;
+  setErrors({
+    general: message ?? "Failed to submit claim. Please try again.",
+  });
 },
 
 
