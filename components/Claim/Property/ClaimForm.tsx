@@ -75,7 +75,7 @@ export default function ClaimForm() {
 
         {/* Claim Type */}
         <div className="space-y-2">
-  <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+       <label htmlFor="type" className="block text-sm font-medium text-gray-700">
     Claim Type
     </label>
       <Input
