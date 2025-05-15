@@ -15,7 +15,9 @@ export default function AddResultForm() {
   const [decision, setDecision] = useState("");
   const [reason, setReason] = useState("");
   const [amountApproved, setAmountApproved] = useState("");
-  const [error, setError] = useState("");
+  
+  // Error state for each field
+  const [errors, setErrors] = useState<{ decision?: string; reason?: string; amountApproved?: string }>({});
 
   const mutation = useMutation({
     mutationFn: (payload: AddClaimResultInput) => addClaimResult(payload),
@@ -23,7 +25,8 @@ export default function AddResultForm() {
       router.back();
     },
     onError: (err: AxiosError) => {
-      setError(
+      setErrors({ decision: undefined, reason: undefined, amountApproved: undefined });
+      alert(
         (err.response?.data as { message?: string })?.message ||
           "Failed to submit result."
       );
@@ -33,25 +36,31 @@ export default function AddResultForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
-    if (!decision.trim() || !reason.trim() || !amountApproved.trim()) {
-      setError("All fields are required.");
+    const validationErrors: typeof errors = {};
+
+    if (!decision.trim()) validationErrors.decision = "Decision is required.";
+    if (!reason.trim()) validationErrors.reason = "Reason is required.";
+    if (!amountApproved.trim()) {
+      validationErrors.amountApproved = "Approved amount is required.";
+    } else {
+      const parsedAmount = parseFloat(amountApproved);
+      if (isNaN(parsedAmount) || parsedAmount < 0) {
+        validationErrors.amountApproved = "Approved amount must be a positive number.";
+      }
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
-    const parsedAmount = parseFloat(amountApproved);
-    if (isNaN(parsedAmount) || parsedAmount < 0) {
-      setError("Approved amount must be Postive number.");
-      return;
-    }
-
-    setError(""); // Clear previous error
+    setErrors({}); // Clear previous errors
 
     const payload: AddClaimResultInput = {
       claimId: id as string,
       decision: decision.trim(),
       reason: reason.trim(),
-      amountApproved: parsedAmount,
+      amountApproved: parseFloat(amountApproved),
     };
 
     mutation.mutate(payload);
@@ -59,11 +68,8 @@ export default function AddResultForm() {
 
   return (
     <div className="p-10 max-w-3xl mx-auto bg-white mt-10 shadow rounded-lg">
-       <h1 className="text-2xl font-bold text-center text-gray-800">Submit Result On Claim</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6"
-      >
+      <h1 className="text-2xl font-bold text-center text-gray-800">Submit Result On Claim</h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
         <p className="text-center text-sm text-gray-500 mb-2">
           Claim ID: <span className="font-medium">{id}</span>
         </p>
@@ -81,6 +87,9 @@ export default function AddResultForm() {
             placeholder="e.g. Approved, Rejected"
             className="w-full border border-gray-300 rounded px-4 py-2"
           />
+          {errors.decision && (
+            <p className="text-red-600 text-sm mt-1">{errors.decision}</p>
+          )}
         </div>
 
         {/* Reason */}
@@ -96,6 +105,9 @@ export default function AddResultForm() {
             className="w-full pl-4 pr-4 py-2 border border-gray-400 rounded-md focus:outline-none bg-gray-200 resize-none"
             rows={4}
           />
+          {errors.reason && (
+            <p className="text-red-600 text-sm mt-1">{errors.reason}</p>
+          )}
         </div>
 
         {/* Amount Approved */}
@@ -111,14 +123,12 @@ export default function AddResultForm() {
             min={0}
             className="w-full border border-gray-300 rounded px-4 py-2"
           />
+          {errors.amountApproved && (
+            <p className="text-red-600 text-sm mt-1">{errors.amountApproved}</p>
+          )}
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <p className="text-red-600 text-sm text-center font-medium">{error}</p>
-        )}
-
-        {/* Submit */}
+        {/* Submit & Cancel */}
         <div className="flex items-center gap-4 mt-6">
           <button
             type="button"
