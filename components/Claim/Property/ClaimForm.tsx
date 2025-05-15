@@ -60,7 +60,7 @@ export default function ClaimForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-white flex justify-center items-center px-4">
+    <div className="p-10 max-w-3xl mx-auto bg-white mt-10 shadow rounded-lg">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-xl space-y-6"
