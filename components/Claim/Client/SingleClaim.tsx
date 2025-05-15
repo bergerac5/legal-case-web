@@ -147,7 +147,8 @@ export default function ClaimDetails() {
             <p className="text-sm text-gray-500">No damaged items listed.</p>
           )}
         </div>
-
+        
+        {/*Back Button */}
         <div className="flex justify-end items-center gap-4 pt-4">
           <button
             type="button"
