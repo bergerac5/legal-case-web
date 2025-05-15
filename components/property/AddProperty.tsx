@@ -65,28 +65,24 @@ export default function AddProperty() {
               placeholder="Name Of Property"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              required
             />
             <Input
               type="number"
               placeholder="Price Of Property"
               value={formData.price}
               onChange={(e) => handleChange("price", e.target.value)}
-              required
             />
             <Input
               type="Text"
               placeholder="Department Property Belong"
               value={formData.department}
               onChange={(e) => handleChange("department", e.target.value)}
-              required
             />
              <Input
               type="Text"
               placeholder="Location Of Property"
               value={formData.location}
               onChange={(e) => handleChange("location", e.target.value)}
-              required
             />
             <label className="font-semibold">Date Of Bought</label>
             <Input
@@ -94,21 +90,18 @@ export default function AddProperty() {
               placeholder="Bought Date"
               value={formData.boughtTime}
               onChange={(e) => handleChange("boughtTime", e.target.value)}
-              required
             />
             <Input
               type="Text"
               placeholder="Manufacturer Of Property"
               value={formData.manufacturer}
               onChange={(e) => handleChange("manufacturer", e.target.value)}
-              required
             />
             <Input
               type="Text"
               placeholder="Supplier Of Property"
               value={formData.supplier}
               onChange={(e) => handleChange("supplier", e.target.value)}
-              required
             />
           </div>
         <div className="flex items-center gap-4 mt-6">
