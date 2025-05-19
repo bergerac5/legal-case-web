@@ -1,9 +1,13 @@
+
 import ResetPasswordForm from '@/components/password/ResetPasswordForm'
 import backgroundPic from '../../assets/BgPc.jpeg';
 import React from 'react'
 
+
+
 const ResetPassword = () => {
   return (
+
     <div className="relative w-screen h-screen overflow-hidden">
   <img
     src={backgroundPic.src}
@@ -14,7 +18,6 @@ const ResetPassword = () => {
     <ResetPasswordForm/>
   </div>
 </div>
-
   )
 }
 

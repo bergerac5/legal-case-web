@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar/NavBar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import React from "react";
 
@@ -6,7 +7,8 @@ const Dashboard = () => {
     
     <ProtectedRoute allowedRoles={["Admin","Lawyer"]}>
     <div>
-      <div className="p-8">
+      <div>
+        <Navbar/>
         <h1 className="text-2xl font-bold mb-4 text-center">Dashboard</h1>
         {/*to do dashboard page content here */}
       

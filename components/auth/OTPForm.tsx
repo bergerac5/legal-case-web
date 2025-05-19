@@ -29,16 +29,11 @@ export default function VerifyOtpForm() {
   const verifyOtpMutation = useMutation({
     mutationFn: () => verifyOtp(email, otp),
     onSuccess: (data) => {
-      const { access_token, mustResetPassword } = data;
+      const { access_token} = data;
 
       // Save token and decode it into context
       login(access_token);
-
-      if (mustResetPassword) {
-        router.push("/reset-password");
-      } else {
         router.push("/dashboard");
-      }
     },
     onError: () => {
       setMessage("Invalid or expired OTP.");
