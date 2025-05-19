@@ -9,8 +9,10 @@ import profilePic from '../../assets/profile.png';
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Client", href: "/clients" },
-  { label: "Case", href: "/cases" },  
+  { label: "Properties", href: "/properties" },
+  { label: "Insurance Management", href: "/insurance-management" },
+  { label: "Cases", href: "/case" },
+  { label: "Clients", href: "/client" }
 ];
 
 export default function Navbar() {
