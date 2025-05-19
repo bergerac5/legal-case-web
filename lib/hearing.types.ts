@@ -1,12 +1,12 @@
 export interface Hearing {
   id: string;
   case_id: string;
-  start_time: Date;
-  end_time: Date;
+  start_time: string;
+  end_time: string;  
   location?: string;
   notes?: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 }
 
 

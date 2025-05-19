@@ -162,6 +162,7 @@ export default function CaseEditForm({ caseId }: CaseEditFormProps) {
       queryClient.invalidateQueries({ queryKey: ["cases"] });
       queryClient.invalidateQueries({ queryKey: ["case-documents", caseId] });
       toast.success("Case updated successfully");
+      router.push(`/cases/view/${caseId}`);
     },
     onError: (error: Error) => {
       console.error("Error updating case:", error);

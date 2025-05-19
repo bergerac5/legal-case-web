@@ -217,35 +217,48 @@ export default function ViewCasePage({ params }: { params: { id: string } }) {
     },
   });
 
-  // Delete hearing mutation (with optimistic updates)
   const deleteHearingMutation = useMutation({
     mutationFn: hearingAPI.delete,
     onMutate: async (hearingId) => {
+      // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await queryClient.cancelQueries({ queryKey: ["case-hearings", caseId] });
-      const previousHearings = queryClient.getQueryData([
+
+      // Snapshot the previous value
+      const previousHearingsData = queryClient.getQueryData([
         "case-hearings",
         caseId,
       ]);
 
-      queryClient.setQueryData(["case-hearings", caseId], (old: Hearing[]) =>
-        old?.filter((hearing) => hearing.id !== hearingId)
-      );
+      // Optimistically update to the new value
+      queryClient.setQueryData(["case", caseId], (old: any) => {
+  if (!old) return old;
+  return {
+    ...old,
+    hearings: old.hearings?.filter(
+      (hearing: Hearing) => hearing.id !== hearingId
+    ),
+  };
+});
 
-      return { previousHearings };
+      // Return a context object with the snapshotted value
+      return { previousHearingsData };
     },
-    onError: (error: Error, hearingId, context) => {
-      if (context?.previousHearings) {
+    onError: (error, hearingId, context) => {
+      // Rollback to the previous value if the mutation fails
+      if (context?.previousHearingsData) {
         queryClient.setQueryData(
           ["case-hearings", caseId],
-          context.previousHearings
+          context.previousHearingsData
         );
       }
-      toast.error(error.message || "Failed to delete hearing");
+      console.error("Error deleting hearing:", error);
+      toast.error("Failed to delete hearing");
     },
     onSuccess: () => {
       toast.success("Hearing deleted successfully");
     },
     onSettled: () => {
+      // Always refetch after error or success to ensure sync with server
       queryClient.invalidateQueries({ queryKey: ["case-hearings", caseId] });
     },
   });
@@ -550,32 +563,41 @@ export default function ViewCasePage({ params }: { params: { id: string } }) {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Link href={""}>
+                    <Link href={`/hearings/edit/${hearing.id}`}>
                       <Button
                         variant="outline"
                         size="sm"
                         label=""
-                        icon={
-                          deleteHearingMutation.isPending &&
-                          deleteHearingMutation.variables === hearing.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Trash2 className="h-4 w-4 text-red-500" />
-                          )
-                        }
-                        onClick={() => {
-                          if (
-                            confirm(
-                              "Are you sure you want to delete this hearing?"
-                            )
-                          ) {
-                            deleteHearingMutation.mutate(hearing.id);
-                          }
-                        }}
-                        disabled={deleteHearingMutation.isPending}
-                        title="Delete"
+                        icon={<Edit className="h-4 w-4" />}
+                        title="Edit"
                       />
                     </Link>
+                    {/* Delete button inline - no separate component needed */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      label=""
+                      icon={
+                        deleteHearingMutation.isPending &&
+                        deleteHearingMutation.variables === hearing.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        )
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (
+                          confirm(
+                            "Are you sure you want to delete this hearing?"
+                          )
+                        ) {
+                          deleteHearingMutation.mutate(hearing.id);
+                        }
+                      }}
+                      disabled={deleteHearingMutation.isPending}
+                      title="Delete Hearing"
+                    />
                   </div>
                 </div>
                 {hearing.notes && (

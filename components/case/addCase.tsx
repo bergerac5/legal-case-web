@@ -3,9 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCase } from "@/services/case/cases.api";
 import { useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Save } from "lucide-react";
+import { Loader2, ArrowLeft, Save, FileText } from "lucide-react";
 import Button from "@/components/UI/Button";
 import toast from "react-hot-toast";
 import { CaseStatus } from "@/lib/types";
@@ -14,12 +13,11 @@ import { getClientByPoc } from "@/services/client/clients.api";
 import { getLawyers } from "@/services/user/users.api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { CreateDocumentDto } from "@/lib/documentType";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/constants";
 import { createDocument } from "@/services/document/document.api";
+import Link from "next/link";
 
-// Define validation schema
 const caseFormSchema = z.object({
   classification: z.string().min(1, "Classification is required"),
   type: z.string().min(1, "Type is required"),
@@ -51,7 +49,7 @@ export default function CaseRegistrationForm({
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  //poc
+  // State for POC search (only used when no clientId is provided)
   const [poc, setPoc] = useState("");
   const [pocClient, setPocClient] = useState<{
     id: string;
@@ -72,26 +70,15 @@ export default function CaseRegistrationForm({
     }
   };
 
-  // Fetch clients and lawyers for dropdowns
-  const { data: clients } = useQuery({
-    queryKey: ["clients"],
-    queryFn: () => getClientByPoc(""),
-  });
-
+  // Fetch lawyers for dropdown
   const {
     data: lawyers,
     error,
-    isLoading,
+    isLoading: isLoadingLawyers,
   } = useQuery({
     queryKey: ["lawyers"],
     queryFn: getLawyers,
   });
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error fetching lawyers:", error);
-    }
-  }, [error]);
 
   const {
     register,
@@ -109,7 +96,6 @@ export default function CaseRegistrationForm({
     },
   });
 
-  // Add this to handle file changes
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setValue("document", e.target.files[0]);
@@ -125,49 +111,10 @@ export default function CaseRegistrationForm({
     }
   }, [clientId, setValue]);
 
-  const createCaseMutation = useMutation({
-    mutationFn: async (data: CaseFormValues) => {
-      // First create the case
-      const caseResponse = await axios.post(`${API_BASE_URL}/cases`, {
-        classification: data.classification,
-        type: data.type,
-        status: data.status || CaseStatus.OPEN,
-        client_id: data.client_id,
-        lawyer_id: data.lawyer_id,
-      });
-
-      const caseId = caseResponse.data.id;
-
-      // Then upload document if exists
-      if (data.document) {
-        await createDocument(
-          {
-            case_id: caseId,
-            filename: data.document.name,
-            file_type: data.document.type,
-          },
-          data.document
-        );
-      }
-
-      return caseResponse.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cases"] });
-      toast.success("Case created successfully");
-      router.push(`/cases`);
-    },
-    onError: (error: Error) => {
-      console.error("Error creating case:", error);
-      toast.error(error.message || "Failed to create case");
-    },
-  });
-
-  const onSubmit = async (data: CaseFormValues) => {
+const createCaseMutation = useMutation({
+  mutationFn: async (data: CaseFormValues) => {
     try {
-      console.log("Starting case creation...");
-
-      // 1. Create case
+      // 1. First create the case
       const caseResponse = await axios.post(`${API_BASE_URL}/cases`, {
         classification: data.classification,
         type: data.type,
@@ -176,22 +123,23 @@ export default function CaseRegistrationForm({
         lawyer_id: data.lawyer_id,
       });
 
-      console.log("Full case response:", caseResponse.data);
-
-      // 2. Verify and extract case ID from nested data property
-      if (!caseResponse.data?.data?.id) {
+      // 2. Handle different response structures
+      let caseId: string;
+      if (caseResponse.data.id) {
+        // If ID is at root level
+        caseId = caseResponse.data.id;
+      } else if (caseResponse.data.data?.id) {
+        // If ID is nested under data property
+        caseId = caseResponse.data.data.id;
+      } else {
         throw new Error("Case created but no ID found in response");
       }
 
-      const caseId = caseResponse.data.data.id;
-      console.log("Extracted case ID:", caseId);
-
-      // 3. Optional delay
+      // 3. Add small delay if needed (optional)
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // 4. Document upload
+      // 4. Upload document if exists
       if (data.document) {
-        console.log(`Uploading to case ${caseId}`);
         try {
           await createDocument(
             {
@@ -201,28 +149,38 @@ export default function CaseRegistrationForm({
             },
             data.document
           );
-          console.log("Upload successful");
-        } catch (error) {
-          console.error("Upload failed:", error);
-          const errorMessage =
-            error instanceof Error
-              ? error.message
-              : "Failed to upload document";
-          throw new Error(`Document upload failed: ${errorMessage}`);
+        } catch (uploadError) {
+          console.error("Document upload failed:", uploadError);
+          // Continue even if document upload fails
+          throw new Error(
+            `Case created but document upload failed: ${
+              uploadError instanceof Error ? uploadError.message : "Unknown error"
+            }`
+          );
         }
       }
 
-      // 5. Success
-      queryClient.invalidateQueries({ queryKey: ["cases"] });
-      toast.success("Case created successfully");
-      router.push(`/cases`);
+      return { caseId, ...caseResponse.data };
     } catch (error) {
-      console.error("Complete error:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Registration failed";
-      toast.error(errorMessage);
+      console.error("Error in mutationFn:", error);
+      throw error;
     }
-  };
+  },
+  onSuccess: (data, variables) => {
+    queryClient.invalidateQueries({ queryKey: ["cases"] });
+    toast.success("Case created successfully");
+    // Redirect to client page if clientId was provided, otherwise to cases list
+    router.push(variables.client_id ? `/clients/view/${variables.client_id}` : "/cases");
+  },
+  onError: (error: Error) => {
+    console.error("Error creating case:", error);
+    toast.error(error.message || "Failed to create case");
+  },
+});
+
+const onSubmit = async (data: CaseFormValues) => {
+  await createCaseMutation.mutateAsync(data);
+};
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -249,14 +207,10 @@ export default function CaseRegistrationForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Classification */}
               <div>
-                <label
-                  htmlFor="classification"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Classification*
                 </label>
                 <input
-                  id="classification"
                   type="text"
                   {...register("classification")}
                   className={`w-full px-3 py-2 border rounded-md ${
@@ -273,14 +227,10 @@ export default function CaseRegistrationForm({
 
               {/* Type */}
               <div>
-                <label
-                  htmlFor="type"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Type*
                 </label>
                 <input
-                  id="type"
                   type="text"
                   {...register("type")}
                   className={`w-full px-3 py-2 border rounded-md ${
@@ -297,14 +247,10 @@ export default function CaseRegistrationForm({
 
               {/* Status */}
               <div>
-                <label
-                  htmlFor="status"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Status
                 </label>
                 <select
-                  id="status"
                   {...register("status")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md"
                 >
@@ -318,16 +264,12 @@ export default function CaseRegistrationForm({
             </div>
           </div>
 
-          {/* Add the file upload field here */}
+          {/* Document Upload */}
           <div className="col-span-2">
-            <label
-              htmlFor="document"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Document (PDF only)
             </label>
             <input
-              id="document"
               type="file"
               accept=".pdf,application/pdf"
               onChange={handleFileChange}
@@ -347,42 +289,48 @@ export default function CaseRegistrationForm({
             )}
           </div>
 
-          {/* Client and Lawyer Section */}
+          {/* Assignments Section */}
           <div>
             <h2 className="text-lg font-semibold mb-4">Assignments</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Client by POC */}
+              {/* Client Field - shows differently based on whether clientId is provided */}
               <div>
-                <label
-                  htmlFor="poc"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Client POC*
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Client {clientId ? "" : "*"}
                 </label>
-                <div className="flex gap-2">
-                  <input
-                    id="poc"
-                    type="text"
-                    value={poc}
-                    onChange={(e) => setPoc(e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md ${
-                      errors.client_id ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Enter POC"
-                  />
-                  <Button
-                    type="button"
-                    label="Search"
-                    onClick={handlePocSearch}
-                  />
-                </div>
-                {pocError && (
-                  <p className="mt-1 text-sm text-red-600">{pocError}</p>
-                )}
-                {pocClient && (
-                  <p className="mt-1 text-sm text-green-600">
-                    Client: {pocClient.name}
-                  </p>
+                {clientId ? (
+                  <div className="p-2 bg-gray-100 rounded-md">
+                    <p className="text-gray-700">
+                      Client ID: {clientId} (pre-selected)
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={poc}
+                        onChange={(e) => setPoc(e.target.value)}
+                        className={`w-full px-3 py-2 border rounded-md ${
+                          errors.client_id ? "border-red-500" : "border-gray-300"
+                        }`}
+                        placeholder="Enter POC"
+                      />
+                      <Button
+                        type="button"
+                        label="Search"
+                        onClick={handlePocSearch}
+                      />
+                    </div>
+                    {pocError && (
+                      <p className="mt-1 text-sm text-red-600">{pocError}</p>
+                    )}
+                    {pocClient && (
+                      <p className="mt-1 text-sm text-green-600">
+                        Client: {pocClient.name}
+                      </p>
+                    )}
+                  </>
                 )}
                 <input type="hidden" {...register("client_id")} />
                 {errors.client_id && (
@@ -394,31 +342,23 @@ export default function CaseRegistrationForm({
 
               {/* Lawyer */}
               <div>
-                <label
-                  htmlFor="lawyer_id"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Lawyer*
                 </label>
                 <select
-                  id="lawyer_id"
                   {...register("lawyer_id")}
                   className={`w-full px-3 py-2 border rounded-md ${
                     errors.lawyer_id ? "border-red-500" : "border-gray-300"
                   }`}
+                  disabled={isLoadingLawyers}
                 >
                   <option value="">Select a lawyer</option>
-                  {lawyers && lawyers.length > 0 ? (
-                    lawyers.map((lawyer) => (
-                      <option key={lawyer.id} value={lawyer.id}>
-                        {lawyer.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option disabled>No lawyers available</option>
-                  )}
+                  {lawyers?.map((lawyer) => (
+                    <option key={lawyer.id} value={lawyer.id}>
+                      {lawyer.name}
+                    </option>
+                  ))}
                 </select>
-
                 {errors.lawyer_id && (
                   <p className="mt-1 text-sm text-red-600">
                     {errors.lawyer_id.message}

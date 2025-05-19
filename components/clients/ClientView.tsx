@@ -194,20 +194,21 @@ const clientId = params.id;
       </div>
 
       {/* Cases Section */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            <FileText className="h-5 w-5 text-blue-500" />
-            Associated Cases
-          </h2>
-          <Link href={`/cases/new?clientId=${client.id}`}>
-            <Button
-              label="Add Case"
-              variant="primary"
-              size="sm"
-            />
-          </Link>
-        </div>
+<div className="bg-white rounded-lg shadow p-6">
+  <div className="flex justify-between items-center mb-4">
+    <h2 className="text-lg font-semibold flex items-center gap-2">
+      <FileText className="h-5 w-5 text-blue-500" />
+      Associated Cases
+    </h2>
+    <Link href={`/cases/add${client.id ? `?clientId=${client.id}` : ''}`}>
+      <Button
+        label="Add Case"
+        variant="primary"
+        size="sm"
+      />
+    </Link>
+  </div>
+
 
         {client.cases && client.cases.length > 0 ? (
           <div className="overflow-x-auto">

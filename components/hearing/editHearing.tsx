@@ -26,12 +26,7 @@ import { toast } from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { hearingAPI } from "@/services/hearing/hearing.api";
 import { useRouter } from "next/navigation";
-
-interface AddHearingFormProps {
-  caseId: string;
-  onSuccess?: () => void;
-  onCancel?: () => void;
-}
+import { useQuery } from "@tanstack/react-query";
 
 const hearingSchema = z.object({
   date: z.date({
@@ -55,78 +50,98 @@ const hearingSchema = z.object({
 
 type HearingFormData = z.infer<typeof hearingSchema>;
 
-export function AddHearingForm({
+interface EditHearingFormProps {
+  hearingId: string;
+  caseId: string;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+export function EditHearingForm({
+  hearingId,
   caseId,
   onSuccess,
   onCancel,
-}: AddHearingFormProps) {
+}: EditHearingFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   
+  const { data: hearing, isLoading } = useQuery({
+    queryKey: ["hearing", hearingId],
+    queryFn: () => hearingAPI.getById(hearingId),
+  });
+
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors },
-    trigger,
     reset,
+    formState: { errors },
   } = useForm<HearingFormData>({
     resolver: zodResolver(hearingSchema),
   });
 
-  const createHearingMutation = useMutation({
-    mutationFn: hearingAPI.create,
+  // Set form values when hearing data loads
+  useEffect(() => {
+    if (hearing) {
+      reset({
+        date: new Date(hearing.start_time),
+        startTime: format(new Date(hearing.start_time), "HH:mm"),
+        endTime: format(new Date(hearing.end_time), "HH:mm"),
+        location: hearing.location,
+        notes: hearing.notes,
+      });
+    }
+  }, [hearing, reset]);
+
+  const updateHearingMutation = useMutation({
+    mutationFn: ({ id, dto }: { id: string; dto: HearingFormData }) =>
+      hearingAPI.update(id, {
+        start_time: new Date(`${format(dto.date, "yyyy-MM-dd")}T${dto.startTime}:00`),
+        end_time: new Date(`${format(dto.date, "yyyy-MM-dd")}T${dto.endTime}:00`),
+        location: dto.location,
+        notes: dto.notes,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["case-hearings", caseId] });
-      toast.success("Hearing created successfully");
+      toast.success("Hearing updated successfully");
       onSuccess?.();
       router.push(`/cases/view/${caseId}`);
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to create hearing");
+      toast.error(error.message || "Failed to update hearing");
     },
   });
 
   const onSubmit = async (data: HearingFormData) => {
-    if (createHearingMutation.isPending) return;
+    if (updateHearingMutation.isPending) return;
     
     try {
-      await createHearingMutation.mutateAsync({
-        case_id: caseId,
-        start_time: new Date(`${format(data.date, "yyyy-MM-dd")}T${data.startTime}:00`),
-        end_time: new Date(`${format(data.date, "yyyy-MM-dd")}T${data.endTime}:00`),
-        location: data.location,
-        notes: data.notes,
+      await updateHearingMutation.mutateAsync({
+        id: hearingId,
+        dto: data,
       });
     } catch (error) {
-      console.error("Error creating hearing:", error);
+      console.error("Error updating hearing:", error);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 text-gray-600 animate-spin" />
+        <span className="ml-2 text-gray-600">Loading hearing data...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Schedule New Hearing</h1>
-          <p className="text-gray-500">Add hearing details for this case</p>
-
-          <div className="flex gap-2">
-            <Button
-              onClick={() => router.push(`/cases/view/${caseId}`)}
-              label="Back"
-              variant="outline"
-              icon={<ArrowLeft className="h-4 w-4" />}
-            />
-          </div>
+          <h1 className="text-2xl font-bold">Edit Hearing</h1>
+          <p className="text-gray-500">Update hearing details for this case</p>
         </div>
-        {onCancel && (
-          <Button
-            onClick={onCancel}
-            label="Cancel"
-            variant="outline"
-            icon={<ArrowLeft className="h-4 w-4" />}
-          />
-        )}
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -158,10 +173,7 @@ export function AddHearingForm({
                         <CalendarComponent
                           mode="single"
                           selected={field.value}
-                          onSelect={(date) => {
-                            field.onChange(date);
-                            trigger("date");
-                          }}
+                          onSelect={field.onChange}
                           initialFocus
                           disabled={(date) => date < new Date()}
                         />
@@ -244,27 +256,27 @@ export function AddHearingForm({
           <Button
             type="button"
             onClick={() => {
-              reset();
               onCancel?.();
+              router.push(`/cases/view/${caseId}`);
             }}
             label="Cancel"
             variant="outline"
-            disabled={createHearingMutation.isPending}
+            disabled={updateHearingMutation.isPending}
           />
           <Button
             type="submit"
             label={
-              createHearingMutation.isPending
-                ? "Scheduling..."
-                : "Schedule Hearing"
+              updateHearingMutation.isPending
+                ? "Updating..."
+                : "Update Hearing"
             }
             variant="primary"
             icon={
-              createHearingMutation.isPending ? (
+              updateHearingMutation.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : undefined
             }
-            disabled={createHearingMutation.isPending}
+            disabled={updateHearingMutation.isPending}
           />
         </div>
       </form>

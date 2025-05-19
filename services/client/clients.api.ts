@@ -7,7 +7,7 @@ import {
 
 export const getAllClients = async (page: number) => {
   const response = await axios.get(`${API_BASE_URL}/clients`, {
-    params: { page, limit: 10 }
+    params: { page, limit: 5 }
   });
   return response.data; 
 };
