@@ -56,6 +56,7 @@ export default function PropertyDetails() {
           <div><strong>Supplier:</strong> {property.supplier}</div>
         </div>
 
+       {property.status && (
         <div className="pt-4 text-center">
           <button
             onClick={() => router.push(`/property/${id}/claim`)}
@@ -64,6 +65,7 @@ export default function PropertyDetails() {
             Claim This Property
           </button>
         </div>
+        )}
       </div>
     </div>
   );
