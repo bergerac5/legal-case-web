@@ -45,35 +45,13 @@ legal-cases-web/
 
  Route                 Description                            
 
- `/login`              Email/password login form              
- `/verify-otp`         OTP form shown after login             
- `/reset-password`     Shown if user has default password     
- `/dashboard`          Dashboard for testing auth function      
+ `/cases`              case page             
+ `/clients`            client page          
 
 
----
-
-## Authentication Flow
-
-- User logs in using `/login`.
-- On success, app saves the `email` in `localStorage`.
-- Redirects to `/verify-otp` for OTP verification.
-- If OTP is correct:
-  - If password is default: redirect to `/reset-password`.
-  - Else: store `access_token` and decoded user info in context.
-- Token is used to protect routes and check roles.
-- Only authenticated user allowed to protected access pages are  using `ProtectedRoute` logic depend on roles he/she has .
 
 ---
 
-## AuthContext
-
-Located in `context/AuthContext.tsx`:
-- Stores and provides token, user info, and login state.
-- Uses `jwt-decode` to extract `role_id` from token.
-- Provides `login`, `logout`, and role-based access functions.
-
----
 
 ## API Integration
 
@@ -91,20 +69,12 @@ Server url is stored  in:
 
 ```ts
 /lib/constants.ts
-Server URL   API_BASE_URL = "http://localhost:5000";
+Server URL   API_BASE_URL = "http://localhost:3000";
 
 ```
 
 ```
 
-## Key Components
-
-Component                   Purpose                                      
-
- `LoginForm.tsx`        Login form with email/password               
- `OTPForm.tsx`          OTP input and submit                             
- `Input.tsx`            Reusable styled input field                  
- `Button.tsx`           Reusable button                              
 
 ---
 
@@ -130,4 +100,4 @@ free to use and modify.
 
 ## Author
 
-Niyonkuru Samuel
+Bergerac Irakarama

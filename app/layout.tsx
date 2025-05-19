@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { AuthProvider } from "@/context/AuthContex";
+import { Toaster } from "react-hot-toast"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,17 +21,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
-        <AuthProvider>
-          <Providers>
-            <main className="flex-1">{children}</main>
-          </Providers>
-        </AuthProvider>
-        {/*<footer className="pt-6 text-center text-sm text-gray-500">
+
+     <html lang="en">
+     <body className={`${inter.className} $ antialiased`}>
+       <AuthProvider>
+         <Providers>{children}</Providers> {/* React Query Provider */}
+         <Toaster position="top-right" />
+       </AuthProvider>
+       {/*<footer className="pt-6 text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Rwanda Energy Group (REG) – All rights reserved.
         </footer>*/}
-      </body>
-    </html>
+     </body>
+   </html>
+
   );
 }
