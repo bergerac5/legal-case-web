@@ -378,7 +378,7 @@ export default function ViewCasePage({ params }: { params: { id: string } }) {
             <div className="space-y-3">
               <div>
                 <p className="text-sm text-gray-500">Name</p>
-                <p className="font-medium">{caseData.client.name}</p>
+                <p className="font-medium">{caseData.client.names}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">POC</p>
@@ -386,7 +386,7 @@ export default function ViewCasePage({ params }: { params: { id: string } }) {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Phone</p>
-                <p className="font-medium">{caseData.client.phone}</p>
+                <p className="font-medium">{caseData.client.phoneNumber}</p>
               </div>
               <Link href={`/clients/view/${caseData.client.id}`}>
                 <Button

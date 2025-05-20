@@ -11,7 +11,22 @@ export default function AddClientClaim() {
   const router = useRouter();
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [formData, setFormData] = useState({
+
+  interface ClientClaimFormData {
+    client: {
+      names: string;
+      poc: string;
+      phoneNumber: string;
+      address: string;
+    };
+    type: "Client";
+    claimProgress: "PENDING";
+    dateOfClaim: string;
+    description: string;
+    claimAmount: string;
+    damagedItems: { itemName: string }[];
+  }
+  const [formData, setFormData] = useState<ClientClaimFormData>({
     client: {
       names: "",
       poc: "",
@@ -29,25 +44,25 @@ export default function AddClientClaim() {
   const addClaimMutation = useMutation({
     mutationFn: addClientClaim,
     onSuccess: (data) => {
-  if (data.message === "Client claim successfully submitted.") {
-    router.push("/client-claims");
-  } else if (data.status === "error") {
-    // show message directly
-    setErrors({ general: data.message || "An error occurred" });
-  }
-},
+      if (data.message === "Client claim successfully submitted.") {
+        router.push("/client-claims");
+      } else if (data.status === "error") {
+        // show message directly
+        setErrors({ general: data.message || "An error occurred" });
+      }
+    },
 
-onError: (error: AxiosError) => {
-  const message = (error.response?.data as { message?: string })?.message;
-  setErrors({
-    general: message ?? "Failed to submit claim. Please try again.",
+    onError: (error: AxiosError) => {
+      const message = (error.response?.data as { message?: string })?.message;
+      setErrors({
+        general: message ?? "Failed to submit claim. Please try again.",
+      });
+    },
+
+
   });
-},
 
 
-  });
-
-  
 
   const updateClientField = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -145,9 +160,9 @@ onError: (error: AxiosError) => {
         {/* Client Info */}
         <div className="space-y-4">
           {[{ label: "Full Name", field: "names" },
-            { label: "POC", field: "poc" },
-            { label: "Phone Number", field: "phoneNumber" },
-            { label: "Address", field: "address" }].map(({ label, field }) => (
+          { label: "POC", field: "poc" },
+          { label: "Phone Number", field: "phoneNumber" },
+          { label: "Address", field: "address" }].map(({ label, field }) => (
             <div key={field}>
               <Input
                 type="text"

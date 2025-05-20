@@ -2,9 +2,9 @@
 
 export interface Client {
   id: string;
-  name: string;
+  names: string;
   poc: string;
-  phone: string;
+  phoneNumber: string;
   address: string;
   created_at: string | Date;
   updated_at: string | Date;
@@ -81,12 +81,13 @@ export interface PaginatedResponse<T> {
 
 export type PaginatedClientResponse = PaginatedResponse<Client>;
 export type PaginatedCaseResponse = PaginatedResponse<Case | ExpandedCase>;
+export type PaginatedPropertyResponse = PaginatedResponse<Property>;
 
 // DTO Interfaces
 export interface ClientDto {
-  name: string;
+  names: string;
   poc: string;
-  phone: string;
+  phoneNumber: string;
   address: string;
 }
 
@@ -105,7 +106,7 @@ export interface UpdateCaseDto {
   client_id?: string;
   lawyer_id?: string;
 }
-=======
+
 export interface CreatePropertyInput {
     name: string;
     price: number;
@@ -129,12 +130,12 @@ export interface CreatePropertyInput {
     supplier: string;
   }
   
-  export interface PaginatedResponse {
-    data: Property[];
-    total: number;
-    page: number;
-    totalPages: number;
-  }
+  // export interface PaginatedResponse {
+  //   data: Property[];
+  //   total: number;
+  //   page: number;
+  //   totalPages: number;
+  // }
   
   export interface PaginatedClaimResponse {
     data: InsuranceClaim[];

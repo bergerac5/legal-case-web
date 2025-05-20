@@ -53,7 +53,7 @@ export default function CaseRegistrationForm({
   const [poc, setPoc] = useState("");
   const [pocClient, setPocClient] = useState<{
     id: string;
-    name: string;
+    names: string;
   } | null>(null);
   const [pocError, setPocError] = useState<string | null>(null);
 
@@ -327,7 +327,7 @@ const onSubmit = async (data: CaseFormValues) => {
                     )}
                     {pocClient && (
                       <p className="mt-1 text-sm text-green-600">
-                        Client: {pocClient.name}
+                        Client: {pocClient.names}
                       </p>
                     )}
                   </>

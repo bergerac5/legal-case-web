@@ -9,11 +9,12 @@ import {
   ClientClaim,
   CreateFullClaimDto,
   ClaimSummary,
-  AddClaimResultInput
+  AddClaimResultInput,
+  Property
 } from "../lib/types"
 
 //Get all Properties Api Call
-export const getAllProperties = async (page: number): Promise<PaginatedResponse> => {
+export const getAllProperties = async (page: number): Promise<PaginatedResponse<Property>> => {
   const response = await axios.get(`${API_BASE_URL}/property/all?page=${page}&limit=10`);
   return response.data;
 };
@@ -51,13 +52,13 @@ export const getSinglePropertyClaim = async (id: string) => {
 
 //Gat AllClientClaim Api Call
 export async function getAllClientClaims(page: number): Promise<PaginatedClientClaimResponse> {
-  const res = await axios.get(`${API_BASE_URL}/client/claims?page=${page}`);
+  const res = await axios.get(`${API_BASE_URL}/clients/claims?page=${page}`);
   return res.data;
 }
 
 //Get ClientClaimByItsId Api Call
 export async function getClaimClaimById(id: string): Promise<ClientClaim> {
-  const response = await axios.get(`${API_BASE_URL}/client/${id}`);
+  const response = await axios.get(`${API_BASE_URL}/clients/claims/${id}`);
   return response.data;
 }
 
@@ -69,7 +70,7 @@ export const updateClaimProgress = async ({
   id: string;
   claimProgress: "PENDING" | "COMPLETED" | "FAILED";
 }) => {
-  const response = await axios.put(`${API_BASE_URL}/client/update/${id}`, {
+  const response = await axios.put(`${API_BASE_URL}/clients/claims/update/${id}`, {
     claimProgress,
   });
   return response.data;
@@ -78,7 +79,7 @@ export const updateClaimProgress = async ({
 //Adding Claim Of Client Api Call 
 export const addClientClaim = async (clientclaim: CreateFullClaimDto) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/client/claim`, clientclaim);
+    const response = await axios.post(`${API_BASE_URL}/clients/claim`, clientclaim);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
@@ -89,12 +90,12 @@ export const addClientClaim = async (clientclaim: CreateFullClaimDto) => {
 
 // Get Claim Summary (REG and Client totals)
 export async function getClaimSummary(): Promise<ClaimSummary> {
-  const response = await axios.get(`${API_BASE_URL}/client/summary`);
+  const response = await axios.get(`${API_BASE_URL}/clients/summary`);
   return response.data;
 }
 
 //add result on claim
 export const addClaimResult = async (data: AddClaimResultInput) => {
-  const response = await axios.post(`${API_BASE_URL}/client/result`, data);
+  const response = await axios.post(`${API_BASE_URL}/clients/result`, data);
   return response.data;
 };

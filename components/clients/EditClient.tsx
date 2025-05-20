@@ -13,12 +13,12 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 const clientSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  names: z.string().min(1, "Name is required"),
   poc: z
     .string()
     .min(1, "Point of Contact is required")
     .regex(/^[0-9]+$/, "POC must contain only numbers"),
-  phone: z
+  phoneNumber: z
     .string()
     .min(1, "Phone is required")
     .regex(/^[0-9]+$/, "Phone must contain only numbers"),
@@ -51,9 +51,9 @@ export default function EditClientForm({ clientId }: { clientId: string }) {
   useEffect(() => {
     if (client) {
       reset({
-        name: client.name,
+        names: client.names,
         poc: client.poc,
-        phone: client.phone,
+        phoneNumber: client.phoneNumber,
         address: client.address,
       });
     }
@@ -115,15 +115,15 @@ export default function EditClientForm({ clientId }: { clientId: string }) {
             Name *
           </label>
           <Input
-            id="name"
+            id="names"
             type="text"
-            {...register("name")}
+            {...register("names")}
             className={`w-full ${
-              errors.name ? "border-red-500" : "border-gray-300"
+              errors.names ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+          {errors.names && (
+            <p className="mt-1 text-sm text-red-600">{errors.names.message}</p>
           )}
         </div>
 
@@ -160,13 +160,13 @@ export default function EditClientForm({ clientId }: { clientId: string }) {
           <Input
             id="phone"
             type="tel"
-            {...register("phone")}
+            {...register("phoneNumber")}
             className={`w-full ${
-              errors.phone ? "border-red-500" : "border-gray-300"
+              errors.phoneNumber ? "border-red-500" : "border-gray-300"
             }`}
           />
-          {errors.phone && (
-            <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+          {errors.phoneNumber && (
+            <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>
           )}
         </div>
 

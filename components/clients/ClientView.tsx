@@ -27,9 +27,9 @@ interface Case {
 
 interface Client {
   id: string;
-  name: string;
+  names: string;
   poc: string;
-  phone: string;
+  phoneNumber: string;
   address: string;
   created_at: string;
   updated_at: string;
@@ -106,7 +106,7 @@ const clientId = params.id;
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <User className="h-6 w-6 text-blue-600" />
-            {client.name}
+            {client.names}
           </h1>
           <p className="text-gray-500">Client ID: {client.id}</p>
         </div>
@@ -141,7 +141,7 @@ const clientId = params.id;
             </div>
             <div>
               <p className="text-sm text-gray-500">Phone Number</p>
-              <p className="font-medium">{client.phone}</p>
+              <p className="font-medium">{client.phoneNumber}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Address</p>

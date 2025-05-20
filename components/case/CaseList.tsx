@@ -216,7 +216,7 @@ export default function CaseList() {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-gray-500">{caseItem.client?.name}</div>
+                  <div className="text-gray-500">{caseItem.client?.names}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-gray-500">{caseItem.lawyer?.name}</div>

@@ -194,7 +194,7 @@ export default function ClientList() {
                   <div className="font-medium text-gray-700">{client.id}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="font-medium text-gray-700">{client.name}</div>
+                  <div className="font-medium text-gray-700">{client.names}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-gray-500">{client.poc}</div>
@@ -203,7 +203,7 @@ export default function ClientList() {
                   <div className="text-gray-500">{client.address}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-gray-500">{client.phone}</div>
+                  <div className="text-gray-500">{client.phoneNumber}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap flex gap-2">
                   <Link

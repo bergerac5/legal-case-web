@@ -45,7 +45,7 @@ export const deleteClient = async (id: string) => {
   return response.data;
 };
 
-export const getClientByPoc = async (poc: string): Promise<{ id: string; name: string }> => {
+export const getClientByPoc = async (poc: string): Promise<{ id: string; names: string }> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/clients/by-poc/${poc}`);
     return response.data;

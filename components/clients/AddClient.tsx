@@ -12,9 +12,9 @@ import { AxiosError } from "axios";
 
 // Define validation schema
 const clientSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  names: z.string().min(1, "Name is required"),
   poc: z.string().min(1, "Point of Contact is required").regex(/^[0-9]+$/, "POC must contain only numbers"),
-  phone: z.string().min(1, "Phone is required").regex(/^[0-9]+$/, "Phone must contain only numbers"),
+  phoneNumber: z.string().min(1, "Phone is required").regex(/^[0-9]+$/, "Phone must contain only numbers"),
   address: z.string().min(1, "Address is required"),
 });
 
@@ -68,13 +68,13 @@ export default function AddClientForm() {
             Name *
           </label>
           <Input
-            id="name"
+            id="names"
             type="text"
-            {...register("name")}
-            className={`w-full ${errors.name ? "border-red-500" : "border-gray-300"}`}
+            {...register("names")}
+            className={`w-full ${errors.names ? "border-red-500" : "border-gray-300"}`}
           />
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+          {errors.names && (
+            <p className="mt-1 text-sm text-red-600">{errors.names.message}</p>
           )}
         </div>
 
@@ -100,13 +100,13 @@ export default function AddClientForm() {
             Phone *
           </label>
           <Input
-            id="phone"
+            id="phoneNumber"
             type="tel"
-            {...register("phone")}
-            className={`w-full ${errors.phone ? "border-red-500" : "border-gray-300"}`}
+            {...register("phoneNumber")}
+            className={`w-full ${errors.phoneNumber ? "border-red-500" : "border-gray-300"}`}
           />
-          {errors.phone && (
-            <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+          {errors.phoneNumber && (
+            <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>
           )}
         </div>
 

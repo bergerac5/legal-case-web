@@ -53,7 +53,7 @@ export default function CaseEditForm({ caseId }: CaseEditFormProps) {
   const [poc, setPoc] = useState("");
   const [pocClient, setPocClient] = useState<{
     id: string;
-    name: string;
+    names: string;
   } | null>(null);
   const [pocError, setPocError] = useState<string | null>(null);
 
@@ -99,7 +99,7 @@ export default function CaseEditForm({ caseId }: CaseEditFormProps) {
       });
       setPocClient(
         caseData.client
-          ? { id: caseData.client.id, name: caseData.client.name }
+          ? { id: caseData.client.id, names: caseData.client.name }
           : null
       );
     }
@@ -435,7 +435,7 @@ export default function CaseEditForm({ caseId }: CaseEditFormProps) {
                 )}
                 {pocClient && (
                   <p className="mt-1 text-sm text-green-600">
-                    Client: {pocClient.name}
+                    Client: {pocClient.names}
                   </p>
                 )}
                 <input type="hidden" {...register("client_id")} />

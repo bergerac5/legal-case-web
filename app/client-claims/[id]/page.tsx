@@ -1,5 +1,5 @@
 import SingleClaimDetails from '@/components/Claim/Client/SingleClaim'
-import Navbar from '@/components/Navbar/NavBar'
+import Navbar from '@/components/navbar/Navbar'
 import React from 'react'
 
 const SinglePropertyPage = () => {

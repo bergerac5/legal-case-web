@@ -11,8 +11,8 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Properties", href: "/properties" },
   { label: "Insurance Management", href: "/insurance-management" },
-  { label: "Cases", href: "/case" },
-  { label: "Clients", href: "/client" }
+  { label: "Cases", href: "/cases" },
+  { label: "Clients", href: "/clients" }
 ];
 
 export default function Navbar() {

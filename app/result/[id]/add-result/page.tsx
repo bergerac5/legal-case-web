@@ -1,4 +1,4 @@
-import Navbar from '@/components/Navbar/NavBar'
+import Navbar from '@/components/navbar/Navbar'
 import AddResultForm from '@/components/Result/ResultForm'
 import React from 'react'
 
