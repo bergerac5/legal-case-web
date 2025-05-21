@@ -28,9 +28,9 @@ export default function RootLayout({
          <Providers>{children}</Providers> {/* React Query Provider */}
          <Toaster position="top-right" />
        </AuthProvider>
-       {/*<footer className="pt-6 text-center text-sm text-gray-500">
+       {/* <footer className="pt-6 text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Rwanda Energy Group (REG) – All rights reserved.
-        </footer>*/}
+        </footer> */}
      </body>
    </html>
 

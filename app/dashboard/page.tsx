@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar/NavBar";
+import Navbar from "@/components/navbar/Navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import React from "react";
 

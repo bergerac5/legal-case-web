@@ -4,7 +4,7 @@ import clsx from "clsx";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   icon?: ReactNode;
-  variant?: "primary" | "outline" | "secondary";
+  variant?: "primary" | "outline" | "secondary" | "pink";
   size?: "sm" | "md" | "lg";
 }
 
@@ -20,6 +20,7 @@ export default function Button({
     primary: "bg-blue-600 text-white hover:bg-blue-700",
     outline: "border border-gray-300 text-gray-700 hover:bg-gray-100",
     secondary: "bg-gray-100 text-gray-700 hover:bg-gray-200",
+    pink: "bg-pink-800 text-white hover:bg-pink-900",
   };
 
   const sizeClasses = {
