@@ -198,7 +198,7 @@ export default function ResetPasswordForm() {
         <Button
           type="submit"
           label="Reset Password"
-          className="w-full py-2 bg-pink-800 text-white font-semibold rounded-md hover:bg-pink-900 transition cursor-pointer"
+          className="w-full py-2 justify-center bg-pink-800 text-white font-semibold rounded-md hover:bg-pink-900 transition cursor-pointer"
         />
 
         {isSuccess && (

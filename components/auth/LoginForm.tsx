@@ -15,13 +15,13 @@ export default function LoginForm() {
   const router = useRouter();
 
   const loginMutation = useMutation({
-    mutationFn: () => login(email, password),// Api call
+    mutationFn: () => login(email, password), // Api call
     onSuccess: (data) => {
       const { resetPassword, userId } = data;
-    
+
       localStorage.setItem("auth_email", email);
       localStorage.setItem("user_id", userId); // Save user ID if needed
-    
+
       if (resetPassword) {
         router.push("/reset-password");
       } else {
@@ -29,8 +29,7 @@ export default function LoginForm() {
       }
     },
     onError: () => {
-    setErrorMessage("Invalid credentials"); // Log error and show a notify user whats happening in message
-      
+      setErrorMessage("Invalid credentials"); // Log error and show a notify user whats happening in message
     },
   });
 
@@ -46,8 +45,8 @@ export default function LoginForm() {
       <p className="text-center text-gray-500 mt-6 mb-6">
         Securely access your case management system
       </p>
-   
-        { /* login form for submitting data to backend api */}
+
+      {/* login form for submitting data to backend api */}
       <form onSubmit={handleLogin} className="space-y-8">
         <Input
           type="email"
@@ -68,11 +67,13 @@ export default function LoginForm() {
         <Button
           type="submit"
           label={loginMutation.isPending ? "Log In..." : "Log In"}
-          className="w-full py-2 bg-pink-800 text-white font-semibold rounded-md hover:bg-pink-900 transition cursor-pointer"
+          variant="primary"
+          size="md"
+          className="w-full justify-center bg-pink-800 hover:bg-pink-900"
           disabled={loginMutation.isPending}
         />
       </form>
-       
+
       {/* shaw failure error to ui for notifying user */}
       {errorMessage && (
         <p className="mt-5 text-red-600 text-center font-medium">

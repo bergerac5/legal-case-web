@@ -76,7 +76,7 @@ export default function VerifyOtpForm() {
         <Button
           type="submit"
           label={verifyOtpMutation.isPending ? "Verifying..." : "Submit"}
-          className="w-52 py-2 bg-pink-800 text-white font-semibold rounded-md hover:bg-pink-900 transition cursor-pointer"
+          className="w-52 py-2 justify-center bg-pink-800 text-white font-semibold rounded-md hover:bg-pink-900 transition cursor-pointer"
           disabled={verifyOtpMutation.isPending}
         />
       </form>
