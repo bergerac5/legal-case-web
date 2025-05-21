@@ -69,14 +69,11 @@ Server url is stored  in:
 
 ```ts
 /lib/constants.ts
-Server URL   API_BASE_URL = "http://localhost:3000";
+Server URL   API_BASE_URL = "http://localhost:5000";
 
 ```
 
-```
 
-
----
 
 ### Run Project Locally
 
