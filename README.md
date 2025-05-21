@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Legal Case Management Login and verify OTP Frontend UI
 
-## Getting Started
+This is the **frontend** of the Legal Case Management platform built using **Next.js App Router**, designed to interact with a NestJS backend Server. It handles login, OTP verification and route protection based on user roles.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tech Stack
+
+- **Framework**: Next.js (App Router)
+- **Language**: TypeScript
+- **State Management**: React Context API
+- **Data Fetching**: React Query
+- **Styling**: Tailwind CSS
+- **Form UI**: Custom Input and Button Components
+- **Auth**: Token-based (JWT) with role-based protection
+
+---
+
+## Folder Structure
+
+```
+legal-cases-web/
+├── app/                    # Pages (Next.js App Router)
+│   ├── login/              # Login form
+│   ├── verify-otp/         # OTP entry screen
+│   ├── reset-password/     # Password reset page for testting redirect
+|   ├── dashbord/           # Dashboards page for testting redirect
+│   └── layout.tsx          # Root layout
+│
+├── components/             # UI & form components
+│   ├── Auth/               # Auth forms
+│   └── UI/                 # Reusable UI
+|
+├── context/                # State Management for AuthContext
+│      
+├── services/               # API calls (auth.api.ts)
+├── lib/                    # Helpers (constants) for defining server url
+├── assets/                 # Pictures as assets used in project
+├── styles/                 # Tailwind config / global CSS
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+##  Application Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+ Route                 Description                            
 
-## Learn More
+ `/cases`              case page             
+ `/clients`            client page          
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Integration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All backend API calls (e.g., login, verify OTP,resend OTP) are handled in:
+
+```ts
+/services/auth.api.ts
+```
+```
+```
+
+## Nestjs Server Address
+
+Server url is stored  in:
+
+```ts
+/lib/constants.ts
+Server URL   API_BASE_URL = "http://localhost:5000";
+
+```
+
+
+
+### Run Project Locally
+
+```
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+Visit: [http://localhost:3000]
+
+---
+
+---
+
+## License 
+
+free to use and modify.
+
+## Author
+
+Bergerac Irakarama
