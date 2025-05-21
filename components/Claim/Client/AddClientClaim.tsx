@@ -6,63 +6,44 @@ import { addClientClaim } from "@/services/insurance.api";
 import Input from "@/components/UI/Input";
 import Button from "@/components/UI/Button";
 import { AxiosError } from "axios";
+import { CreateFullClaimDto } from "@/lib/types";
 
 export default function AddClientClaim() {
   const router = useRouter();
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  interface ClientClaimFormData {
-    client: {
-      names: string;
-      poc: string;
-      phoneNumber: string;
-      address: string;
-    };
-    type: "Client";
-    claimProgress: "PENDING";
-    dateOfClaim: string;
-    description: string;
+  type ClientClaimFormData = Omit<CreateFullClaimDto, "claimAmount"> & {
     claimAmount: string;
-    damagedItems: { itemName: string }[];
-  }
+  };
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formData, setFormData] = useState<ClientClaimFormData>({
-    client: {
-      names: "",
-      poc: "",
-      phoneNumber: "",
-      address: "",
-    },
+    client: { names: "", poc: "", phoneNumber: "", address: "" },
     type: "Client",
     claimProgress: "PENDING",
     dateOfClaim: "",
     description: "",
-    claimAmount: "",
+    claimAmount: "", // as string for input
     damagedItems: [{ itemName: "" }],
   });
 
   const addClaimMutation = useMutation({
     mutationFn: addClientClaim,
     onSuccess: (data) => {
-      if (data.message === "Client claim successfully submitted.") {
+      if (data.status === "success") {
         router.push("/client-claims");
       } else if (data.status === "error") {
-        // show message directly
-        setErrors({ general: data.message || "An error occurred" });
+        setErrors({
+          general: data.error?.message || "An unknown error occurred.",
+        });
       }
     },
-
     onError: (error: AxiosError) => {
       const message = (error.response?.data as { message?: string })?.message;
       setErrors({
         general: message ?? "Failed to submit claim. Please try again.",
       });
     },
-
-
   });
-
-
 
   const updateClientField = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -114,10 +95,14 @@ export default function AddClientClaim() {
 
     const errorBag: { [key: string]: string } = {};
 
-    if (!formData.client.names.trim()) errorBag["client.names"] = "Full name is required.";
-    if (!formData.client.poc.trim()) errorBag["client.poc"] = "POC is required.";
-    if (!formData.client.phoneNumber.trim()) errorBag["client.phoneNumber"] = "Phone number is required.";
-    if (!formData.client.address.trim()) errorBag["client.address"] = "Address is required.";
+    if (!formData.client.names.trim())
+      errorBag["client.names"] = "Full name is required.";
+    if (!formData.client.poc.trim())
+      errorBag["client.poc"] = "POC is required.";
+    if (!formData.client.phoneNumber.trim())
+      errorBag["client.phoneNumber"] = "Phone number is required.";
+    if (!formData.client.address.trim())
+      errorBag["client.address"] = "Address is required.";
 
     if (!formData.dateOfClaim) {
       errorBag.dateOfClaim = "Please select a valid date of claim.";
@@ -125,7 +110,8 @@ export default function AddClientClaim() {
       errorBag.dateOfClaim = "Invalid date format.";
     }
 
-    if (!formData.description.trim()) errorBag.description = "Description is required.";
+    if (!formData.description.trim())
+      errorBag.description = "Description is required.";
     if (!formData.claimAmount || isNaN(Number(formData.claimAmount))) {
       errorBag.claimAmount = "Claim amount must be a valid number.";
     }
@@ -159,10 +145,12 @@ export default function AddClientClaim() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Client Info */}
         <div className="space-y-4">
-          {[{ label: "Full Name", field: "names" },
-          { label: "POC", field: "poc" },
-          { label: "Phone Number", field: "phoneNumber" },
-          { label: "Address", field: "address" }].map(({ label, field }) => (
+          {[
+            { label: "Full Name", field: "names" },
+            { label: "POC", field: "poc" },
+            { label: "Phone Number", field: "phoneNumber" },
+            { label: "Address", field: "address" },
+          ].map(({ label, field }) => (
             <div key={field}>
               <Input
                 type="text"
