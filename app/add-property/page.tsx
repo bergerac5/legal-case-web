@@ -1,4 +1,4 @@
-import Navbar from '@/components/navbar/Navbar'
+import Navbar from '@/components/Navbar/Navbar'
 import AddProperty from '@/components/property/AddProperty'
 import React from 'react'
 

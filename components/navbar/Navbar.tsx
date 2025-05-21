@@ -9,6 +9,7 @@ import profilePic from '../../assets/profile.png';
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
+  { label: "User Management", href: "/userManagement" },
   { label: "Properties", href: "/properties" },
   { label: "Insurance Management", href: "/insurance-management" },
   { label: "Cases", href: "/cases" },
