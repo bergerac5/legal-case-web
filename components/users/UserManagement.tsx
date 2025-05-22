@@ -1,38 +1,43 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import Link from "next/link";
 import { getAllUsers } from "@/services/user/users.api";
 import { useQuery } from "@tanstack/react-query";
-
+import { useRouter } from "next/navigation";
 
 export default function UserManagement() {
   const [search, setSearch] = useState("");
+  const router = useRouter();
+
   function uuidToShortId(uuid: string, index: number): string {
-    // Simple version: Use index + 1 (001, 002, etc.)
     return String(index + 1).padStart(3, '0');
   }
 
   const { data: users = [], error, isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: getAllUsers,
+    retry: false,
   });
-  console.log("Users data:", users, "Error:", error);
 
-  /*const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase())
-  );*/
+  useEffect(() => {
+    if (error?.message.includes('Unauthorized')) {
+      router.push('/login');
+    }
+  }, [error, router]);
+
+  const handleViewProfile = (userId: string) => {
+    router.push(`/profile/${userId}`);
+  };
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">User Management</h1>
         <Link href="/add-user">
-          <Button className="bg-rose-400 hover:bg-rose-500"
-          label="+ Add User"
-          />
+          <Button className="bg-rose-400 hover:bg-rose-500" label="+ Add User" />
         </Link>
       </div>
 
@@ -67,7 +72,7 @@ export default function UserManagement() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user,index) => (
+            {users.map((user, index) => (
               <tr key={user.id} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2">{uuidToShortId(user.id, index)}</td>
                 <td className="px-4 py-2">
@@ -82,8 +87,10 @@ export default function UserManagement() {
                 <td className="px-4 py-2">{user.name}</td>
                 <td className="px-4 py-2">{user.email}</td>
                 <td className="px-4 py-2">
-                  <Button className="bg-rose-300 hover:bg-rose-400"
-                  label="View"
+                  <Button 
+                    className="bg-rose-300 hover:bg-rose-400"
+                    label="View"
+                    onClick={() => handleViewProfile(user.id)}
                   />
                 </td>
               </tr>
@@ -92,6 +99,5 @@ export default function UserManagement() {
         </table>
       </div>
     </div>
-  )
+  );
 }
-

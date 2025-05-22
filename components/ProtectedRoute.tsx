@@ -7,20 +7,28 @@ import { useEffect } from "react";
 
 type Props = {
   children: React.ReactNode;
-  allowedRoles: string[]; // example: ["admin", "lawyer"]
+  allowedRoles: string[];
 };
 
 export default function ProtectedRoute({ children, allowedRoles }: Props) {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login"); // Not logged in
-    } else if (!allowedRoles.includes(user.role)) {
-      router.push("/unauthorized"); // Logged in but role not allowed
+    if (!isLoading && !user) {
+      router.push("/login");
+    } else if (!isLoading && user && !allowedRoles.includes(user.role)) {
+      router.push("/unauthorized");
     }
-  }, [user, allowedRoles, router]);
+  }, [user, allowedRoles, router, isLoading]);
+
+  if (isLoading) {
+    return null; // or a loading spinner
+  }
+
+  if (!user || !allowedRoles.includes(user.role)) {
+    return null; // while redirect happens
+  }
 
   return <>{children}</>;
 }

@@ -1,77 +1,94 @@
 // app/context/AuthContext.tsx
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import {jwtDecode} from "jwt-decode";
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
+import { jwtDecode } from "jwt-decode";
 
-// Define the shape of our decoded token (adjust fields token contain)
 interface DecodedToken {
   sub: string;
   email: string;
   role: string;
   role_id: string;
-  exp: number; // expiration timestamp
+  exp: number;
 }
 
-// Define what data and functions context provides
 interface AuthContextType {
   token: string | null;
   user: DecodedToken | null;
   login: (token: string) => void;
   logout: () => void;
+  isLoading: boolean;
+  isAuthorized: (allowedRoles: string[]) => boolean; 
 }
 
-// Create context with default value
 const AuthContext = createContext<AuthContextType>({
   token: null,
   user: null,
   login: () => {},
   logout: () => {},
+  isLoading: true,
+  isAuthorized: () => false, 
 });
 
-// Provider component that wraps app and provides authentication state
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null); // JWT token
-  const [user, setUser] = useState<DecodedToken | null>(null); // Decoded user info
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<DecodedToken | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Function to handle login and store token
   const login = (token: string) => {
-    setToken(token); // Save token in state
-    localStorage.setItem("access_token", token); // Store token in local storage
-    const decoded = jwtDecode<DecodedToken>(token); // Decode token to get user info
+    setToken(token);
+    localStorage.setItem("access_token", token);
+    const decoded = jwtDecode<DecodedToken>(token);
     setUser(decoded);
+    setIsLoading(false);
   };
 
-  // Function to clear token and logout user
   const logout = () => {
     setToken(null);
     setUser(null);
     localStorage.removeItem("access_token");
+    setIsLoading(false);
   };
 
-  // Load token on first render (auto-login if token exists)
+  // Add the isAuthorized function
+  const isAuthorized = useCallback((allowedRoles: string[]): boolean => {
+    if (!user) return false;
+    return allowedRoles.includes(user.role);
+  }, [user]);
+
   useEffect(() => {
     const storedToken = localStorage.getItem("access_token");
     if (storedToken) {
-      const decoded = jwtDecode<DecodedToken>(storedToken);
-      const now = Date.now() / 1000;
-      if (decoded.exp > now) {
-        setToken(storedToken);
-        setUser(decoded);
-      } else {
-        logout(); // token expired
+      try {
+        const decoded = jwtDecode<DecodedToken>(storedToken);
+        const now = Date.now() / 1000;
+        if (decoded.exp > now) {
+          setToken(storedToken);
+          setUser(decoded);
+        } else {
+          logout();
+        }
+      } catch (error) {
+        logout();
       }
     }
+    setIsLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ 
+      token, 
+      user, 
+      login, 
+      logout, 
+      isLoading,
+      isAuthorized 
+    }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// Custom hook to use the context
 export function useAuth() {
   return useContext(AuthContext);
 }

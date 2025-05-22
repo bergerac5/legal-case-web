@@ -8,6 +8,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createUser, getAllRoles } from "@/services/user/users.api";
+import { useAuth } from "@/context/AuthContex";
+import toast from "react-hot-toast";
 
 // Updated validation schema (no password fields)
 const userSchema = z.object({
@@ -20,7 +22,14 @@ const userSchema = z.object({
 type UserFormData = z.infer<typeof userSchema>;
 
 export default function AddUserForm() {
+  const { isAuthorized } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthorized(["Admin"])) {
+      router.push("/unauthorized");
+    }
+  }, [isAuthorized, router]);
   const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
   const [loadingRoles, setLoadingRoles] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,7 +69,7 @@ export default function AddUserForm() {
     };
 
     await createUser(userData);
-    alert("User created successfully!");
+    toast.success("User created successfully!");
     router.push("/userManagement");
   } catch (error) {
     console.error("Error creating user:", error);
@@ -75,7 +84,7 @@ export default function AddUserForm() {
     <div className="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow-sm">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold text-gray-800">Add User</h1>
-        <Link href="/user-management">
+        <Link href="/userManagement">
           <Button
             variant="outline"
             className="text-gray-700 bg-rose-500"
