@@ -5,11 +5,43 @@ import {
   ClientDto
 } from "@/lib/types"
 
+const ROWS_PER_PAGE = 10;
+
 export const getAllClients = async (page: number) => {
   const response = await axios.get(`${API_BASE_URL}/clients`, {
     params: { page, limit: 5 }
   });
   return response.data; 
+};
+
+// services/client/clients.api.ts
+export const getClientsByLawyerId = async (lawyerId: string, page: number = 1) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/clients/by-lawyer/${lawyerId}`, {
+      params: { 
+        page, 
+        limit: ROWS_PER_PAGE // Use the same constant as your component (10)
+      }
+    });
+    
+    // Validate response structure
+    if (!response.data?.data || !response.data?.meta) {
+      throw new Error('Invalid API response structure');
+    }
+    
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        const message = error.response.data?.message || error.message;
+        throw new Error(`API Error: ${message}`);
+      }
+      if (error.request) {
+        throw new Error('No response received from server');
+      }
+    }
+    throw new Error(`Failed to fetch clients: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 };
 
 export const createClient = async (client: ClientDto) => {
@@ -57,6 +89,23 @@ export const getClientByPoc = async (poc: string): Promise<{ id: string; names: 
       throw new Error(error.response?.data?.message || 'Failed to fetch client by POC');
     }
     throw error;
+  }
+};
+
+export const getClientByLawyer = async (lawyerId: string, clientId: string) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/clients/by-lawyer/${lawyerId}/${clientId}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        throw new Error("Client not found or not assigned to you");
+      }
+      throw new Error(error.response?.data?.message || "Failed to fetch client");
+    }
+    throw new Error("Failed to fetch client");
   }
 };
 

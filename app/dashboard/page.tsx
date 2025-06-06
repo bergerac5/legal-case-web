@@ -5,7 +5,7 @@ import React from "react";
 const Dashboard = () => {
   return (
     
-    <ProtectedRoute allowedRoles={["Admin","Lawyer"]}>
+    <ProtectedRoute allowedRoles={["Admin","Lawyer","Manager"]}>
     <div>
       <div>
         <Navbar/>

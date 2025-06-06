@@ -1,33 +1,51 @@
-// components/ProtectedRoute.tsx
 "use client";
-
-import { useAuth } from "@/context/AuthContex";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-type Props = {
+interface ProtectedRouteProps {
   children: React.ReactNode;
   allowedRoles: string[];
-};
+  ownerAccess?: boolean;  // New prop to check for owner access
+  ownerId?: string;      // The ID of the resource owner
+  redirectUnauthenticated?: string;
+  redirectUnauthorized?: string;
+}
 
-export default function ProtectedRoute({ children, allowedRoles }: Props) {
-  const { user, isLoading } = useAuth();
+export default function ProtectedRoute({
+  children,
+  allowedRoles,
+  ownerAccess = false,
+  ownerId,
+  redirectUnauthenticated = "/login",
+  redirectUnauthorized = "/dashboard",
+}: ProtectedRouteProps) {
+  const { user, isLoading, isAuthorized } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      router.push("/login");
-    } else if (!isLoading && user && !allowedRoles.includes(user.role)) {
-      router.push("/unauthorized");
+    if (isLoading) return;
+
+    if (!user) {
+      router.push(redirectUnauthenticated);
+      return;
     }
-  }, [user, allowedRoles, router, isLoading]);
+
+    // Check if user is authorized by role OR is the owner (if ownerAccess is enabled)
+    const authorizedByRole = isAuthorized(allowedRoles);
+    const isOwner = ownerAccess && ownerId && user.sub === ownerId;
+    
+    if (!authorizedByRole && !isOwner) {
+      router.push(redirectUnauthorized);
+    }
+  }, [user, isLoading, allowedRoles, router, isAuthorized, ownerAccess, ownerId, redirectUnauthenticated, redirectUnauthorized]);
 
   if (isLoading) {
-    return null; // or a loading spinner
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
-  if (!user || !allowedRoles.includes(user.role)) {
-    return null; // while redirect happens
+  if (!user) {
+    return null;
   }
 
   return <>{children}</>;

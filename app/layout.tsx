@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import { AuthProvider } from "@/context/AuthContex";
+import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast"
 
 const inter = Inter({

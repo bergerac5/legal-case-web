@@ -1,11 +1,12 @@
 "use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllCases, deleteCase } from "@/services/case/cases.api";
+import { getAllCases, deleteCase, getCasesByLawyerId } from "@/services/case/cases.api";
 import { useState } from "react";
 import Link from "next/link";
 import { FolderX, Loader2, Pencil, Trash2, Eye } from "lucide-react";
 import { PaginatedCaseResponse, CaseStatus } from "@/lib/types";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 const ROWS_PER_PAGE = 10;
 
@@ -23,10 +24,26 @@ function isPaginatedResponse(data: unknown): data is PaginatedCaseResponse {
 export default function CaseList() {
   const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  const fetchCases = () => {
+    if (!user) {
+      return Promise.resolve({
+        data: [],
+        meta: { total: 0, page: 1, limit: ROWS_PER_PAGE, totalPages: 0 }
+      });
+    }
+
+    return user.role === "Lawyer"
+      ? getCasesByLawyerId(user.sub, page)
+      : getAllCases(page);
+  };
+
 
   const { data, isLoading, isError, error, isFetching, isPlaceholderData } =useQuery<PaginatedCaseResponse>({    
-      queryKey: ["cases", page],
-      queryFn: () => getAllCases(page),
+      queryKey: ["cases", user?.role, page], // include role and page to trigger refetch
+    queryFn: fetchCases,
+    enabled: !!user,
       placeholderData: (previousData) =>
         previousData ?? {
           data: [],

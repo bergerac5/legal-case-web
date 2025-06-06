@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import Input from "@/components/UI/Input";
 import Button from "@/components/UI/Button";
-import { useAuth } from "@/context/AuthContex";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 interface User {
@@ -35,16 +35,16 @@ const profileSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function ProfileCard({ userId }: { userId: string }) {
-  const { isAuthorized } = useAuth();
+  const { user: currentUser } = useAuth();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!isAuthorized(["Admin"])) {
-      router.push("/unauthorized");
-    }
-  }, [isAuthorized, router]);
+  if (currentUser?.sub !== userId) {
+    router.push("/dashboard");
+  }
+}, [currentUser, router, userId]);
 
   const {
     register,

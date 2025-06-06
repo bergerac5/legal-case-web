@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createUser, getAllRoles } from "@/services/user/users.api";
-import { useAuth } from "@/context/AuthContex";
+import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 
 // Updated validation schema (no password fields)

@@ -1,7 +1,9 @@
-
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { getClientById } from "@/services/client/clients.api";
+import {
+  getClientById,
+  getClientByLawyer,
+} from "@/services/client/clients.api";
 import { useRouter } from "next/navigation";
 import { Loader2, ArrowLeft, Edit, FileText, User } from "lucide-react";
 import Button from "@/components/UI/Button";
@@ -9,6 +11,7 @@ import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 // Define your types
 interface Lawyer {
@@ -20,7 +23,7 @@ interface Lawyer {
 interface Case {
   id: string;
   title: string;
-  status: 'OPEN' | 'CLOSED' | 'IN_PROGRESS' | 'ON_HOLD';
+  status: "OPEN" | "CLOSED" | "IN_PROGRESS" | "ON_HOLD";
   updated_at: string;
   lawyer?: Lawyer;
 }
@@ -36,22 +39,36 @@ interface Client {
   cases?: Case[];
 }
 
-
 export default function ClientViewPage({ params }: { params: { id: string } }) {
-const clientId = params.id;
+  const { user } = useAuth();
+  const clientId = params.id;
   console.log("Client ID:", clientId);
-  const router = useRouter();  
-  const { data: client, isLoading, isError, error } = useQuery<Client>({
-    queryKey: ['client', clientId],
-    queryFn: () => getClientById(clientId),
+  const router = useRouter();
+
+  const getClientFunction = () => {
+    if (user?.role === "Lawyer") {
+      return () => getClientByLawyer(user.sub, clientId);
+    }
+    return () => getClientById(clientId);
+  };
+
+  const {
+    data: client,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<Client>({
+    queryKey: ["client", clientId, user?.role, user?.sub],
+    queryFn: getClientFunction(),
     retry: false,
+    enabled: !!user, // Only fetch if user is available
   });
 
   useEffect(() => {
     if (isError) {
-      toast.error(error?.message || 'Failed to load client');
-      if (error?.message === 'Client not found') {
-        router.push('/clients');
+      toast.error(error?.message || "Failed to load client");
+      if (error?.message === "Client not found") {
+        router.push("/clients");
       }
     }
   }, [isError, error, router]);
@@ -65,10 +82,9 @@ const clientId = params.id;
     );
   }
 
-   if (!client) {
-    return null; 
+  if (!client) {
+    return null;
   }
-
 
   if (isError) {
     return (
@@ -99,6 +115,12 @@ const clientId = params.id;
       </div>
     );
   }
+
+  // Filter cases to only show those assigned to the current lawyer
+  const filteredCases =
+    user?.role === "Lawyer"
+      ? client?.cases?.filter((caseItem) => caseItem.lawyer?.id === user.sub)
+      : client?.cases;
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -194,65 +216,104 @@ const clientId = params.id;
       </div>
 
       {/* Cases Section */}
-<div className="bg-white rounded-lg shadow p-6">
-  <div className="flex justify-between items-center mb-4">
-    <h2 className="text-lg font-semibold flex items-center gap-2">
-      <FileText className="h-5 w-5 text-blue-500" />
-      Associated Cases
-    </h2>
-    <Link href={`/cases/add${client.id ? `?clientId=${client.id}` : ''}`}>
-      <Button
-        label="Add Case"
-        variant="primary"
-        size="sm"
-      />
-    </Link>
-  </div>
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <FileText className="h-5 w-5 text-blue-500" />
+            {user?.role === "Lawyer" ? "Your Cases" : "Associated Cases"}
+          </h2>
+          {(user?.role === "Lawyer" || user?.role === "Manager") && (
+            <Link href={`/cases/add${clientId ? `?clientId=${clientId}` : ""}`}>
+              <Button label="Add Case" variant="primary" size="sm" />
+            </Link>
+          )}
+        </div>
 
-
-        {client.cases && client.cases.length > 0 ? (
+        {filteredCases && filteredCases.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Case</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lawyer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Updated</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Case
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Lawyer
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Last Updated
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {client.cases.map((caseItem) => (
+                {filteredCases.map((caseItem) => (
                   <tr key={caseItem.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium">{caseItem.title}</div>
-                      <div className="text-sm text-gray-500">#{caseItem.id}</div>
+                      <div className="text-sm text-gray-500">
+                        #{caseItem.id}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        caseItem.status === 'OPEN' ? 'bg-green-100 text-green-800' :
-                        caseItem.status === 'CLOSED' ? 'bg-gray-100 text-gray-800' :
-                        'bg-yellow-100 text-yellow-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          caseItem.status === "OPEN"
+                            ? "bg-green-100 text-green-800"
+                            : caseItem.status === "CLOSED"
+                            ? "bg-gray-100 text-gray-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
                         {caseItem.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {caseItem.lawyer ? (
                         <div>
-                          <div className="font-medium">{caseItem.lawyer.name}</div>
-                          <div className="text-sm text-gray-500">{caseItem.lawyer.email}</div>
+                          <div className="font-medium">
+                            {caseItem.lawyer.name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {caseItem.lawyer.email}
+                          </div>
                         </div>
                       ) : (
-                        <span className="text-gray-400">Unassigned</span>
+                        <div className="text-center py-12">
+                          <FileText className="mx-auto h-12 w-12 text-gray-400" />
+                          <h3 className="mt-2 text-sm font-medium text-gray-900">
+                            {user?.role === "Lawyer"
+                              ? "No cases assigned to you"
+                              : "No cases"}
+                          </h3>
+                          <p className="mt-1 text-sm text-gray-500">
+                            {user?.role === "Lawyer"
+                              ? "This client has no cases assigned to you."
+                              : "Get started by creating a new case."}
+                          </p>
+                          {user?.role !== "Lawyer" && (
+                            <div className="mt-6">
+                              <Link href={`/cases/new?clientId=${clientId}`}>
+                                <Button label="New Case" variant="primary" />
+                              </Link>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDate(caseItem.updated_at)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <Link href={`/cases/view/${caseItem.id}`} className="text-blue-600 hover:text-blue-900">
+                      <Link
+                        href={`/cases/view/${caseItem.id}`}
+                        className="text-blue-600 hover:text-blue-900"
+                      >
                         View
                       </Link>
                     </td>
@@ -265,13 +326,12 @@ const clientId = params.id;
           <div className="text-center py-12">
             <FileText className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No cases</h3>
-            <p className="mt-1 text-sm text-gray-500">Get started by creating a new case.</p>
+            <p className="mt-1 text-sm text-gray-500">
+              Get started by creating a new case.
+            </p>
             <div className="mt-6">
               <Link href={`/cases/new?clientId=${client.id}`}>
-                <Button
-                  label="New Case"
-                  variant="primary"
-                />
+                <Button label="New Case" variant="primary" />
               </Link>
             </div>
           </div>

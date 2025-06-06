@@ -29,6 +29,7 @@ export const changePasswordBeforeExpire = async (
 
 
 
+
 //change default password
 export const resetUserPassword = async (
     email: string,
@@ -45,3 +46,19 @@ export const resetUserPassword = async (
     return res.data;
 };
 
+// Admin reset user password (no need for old password)
+export const adminResetUserPassword = async (
+  token: string,
+  email: string
+) => {
+  const res = await axios.post(
+    `${API_BASE_URL}/password/reset`,
+    { email },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};

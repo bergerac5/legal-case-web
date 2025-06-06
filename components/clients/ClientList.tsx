@@ -1,12 +1,13 @@
 "use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllClients, deleteClient } from "@/services/client/clients.api";
+import { getAllClients, deleteClient, getClientsByLawyerId } from "@/services/client/clients.api";
 import { useState } from "react";
 import Link from "next/link";
 import { FolderX, Loader2, Pencil, Trash2, Eye } from "lucide-react";
 import { PaginatedClientResponse } from "@/lib/types";
 import toast from "react-hot-toast";
-
+import { useAuth } from "@/context/AuthContext"; // get current user
+import { getCasesByLawyerId } from "@/services/case/cases.api";
 const ROWS_PER_PAGE = 10;
 
 // Type guard for PaginatedClientResponse
@@ -29,11 +30,34 @@ function isPaginatedResponse(data: unknown): data is PaginatedClientResponse {
 export default function ClientList() {
   const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
+  const { user } = useAuth(); // Get current user from context
+
+  const fetchClient = async () => {
+  try {
+    if (!user) {
+      return {
+        data: [],
+        meta: { total: 0, page: 1, limit: ROWS_PER_PAGE, totalPages: 0 }
+      };
+    }
+
+    const result = user.role === "Lawyer"
+      ? await getClientsByLawyerId(user.sub, page)
+      : await getAllClients(page);
+
+    console.log('API Response:', result); // Debug log
+    return result;
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+    throw error;
+  }
+};
 
   const { data, isLoading, isError, error, isFetching, isPlaceholderData } =
     useQuery<PaginatedClientResponse>({
-      queryKey: ["clients", page],
-      queryFn: () => getAllClients(page),
+      queryKey: ["clients", user?.role, user?.sub, page],
+      queryFn: fetchClient,
+      enabled: !!user, // Only run query if user is available
       placeholderData: (previousData) =>
         previousData ?? {
           data: [],

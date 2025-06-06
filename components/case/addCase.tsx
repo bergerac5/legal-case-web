@@ -16,7 +16,7 @@ import { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/constants";
 import { createDocument } from "@/services/document/document.api";
-import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 const caseFormSchema = z.object({
   classification: z.string().min(1, "Classification is required"),
@@ -40,14 +40,24 @@ const caseFormSchema = z.object({
 type CaseFormValues = z.infer<typeof caseFormSchema>;
 
 interface CaseRegistrationFormProps {
-  clientId?: string; // Optional pre-selected client
+  clientId?: string;
+  user: {
+    id: string;
+    role: string;
+  };
 }
+
 
 export default function CaseRegistrationForm({
   clientId,
 }: CaseRegistrationFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  if (!user) {
+  return <div>Loading...</div>;
+}
 
   // State for POC search (only used when no clientId is provided)
   const [poc, setPoc] = useState("");
@@ -105,11 +115,15 @@ export default function CaseRegistrationForm({
   };
 
   // Set client_id if provided via props
-  useEffect(() => {
-    if (clientId) {
-      setValue("client_id", clientId);
-    }
-  }, [clientId, setValue]);
+ useEffect(() => {
+  if (clientId) {
+    setValue("client_id", clientId);
+  }
+
+  if (user.role === "Lawyer") {
+    setValue("lawyer_id", user.sub);
+  }
+}, [clientId, user, setValue]);
 
 const createCaseMutation = useMutation({
   mutationFn: async (data: CaseFormValues) => {
@@ -346,19 +360,20 @@ const onSubmit = async (data: CaseFormValues) => {
                   Lawyer*
                 </label>
                 <select
-                  {...register("lawyer_id")}
-                  className={`w-full px-3 py-2 border rounded-md ${
-                    errors.lawyer_id ? "border-red-500" : "border-gray-300"
-                  }`}
-                  disabled={isLoadingLawyers}
-                >
-                  <option value="">Select a lawyer</option>
-                  {lawyers?.map((lawyer) => (
-                    <option key={lawyer.id} value={lawyer.id}>
-                      {lawyer.name}
-                    </option>
-                  ))}
-                </select>
+  {...register("lawyer_id")}
+  className={`w-full px-3 py-2 border rounded-md ${
+    errors.lawyer_id ? "border-red-500" : "border-gray-300"
+  }`}
+  disabled={user.role === "Lawyer" || isLoadingLawyers}
+>
+  <option value="">Select a lawyer</option>
+  {lawyers?.map((lawyer) => (
+    <option key={lawyer.id} value={lawyer.id}>
+      {lawyer.name}
+    </option>
+  ))}
+</select>
+
                 {errors.lawyer_id && (
                   <p className="mt-1 text-sm text-red-600">
                     {errors.lawyer_id.message}

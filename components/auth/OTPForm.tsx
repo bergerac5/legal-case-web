@@ -6,7 +6,7 @@ import Button from "@/components/UI/Button";
 import { verifyOtp, resendOtp } from "@/services/auth.api";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContex";
+import { useAuth } from "@/context/AuthContext";
 
 export default function VerifyOtpForm() {
   const [otp, setOtp] = useState("");

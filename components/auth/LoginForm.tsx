@@ -7,27 +7,29 @@ import Button from "@/components/UI/Button";
 import { login } from "@/services/auth.api";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const loginMutation = useMutation({
     mutationFn: () => login(email, password), // Api call
     onSuccess: (data) => {
-      const { resetPassword, userId } = data;
+  const { mustReset, userId } = data;
 
-      localStorage.setItem("auth_email", email);
-      localStorage.setItem("user_id", userId); // Save user ID if needed
+  localStorage.setItem("auth_email", email);
+  localStorage.setItem("user_id", userId); // save user ID to local storage
 
-      if (resetPassword) {
-        router.push("/reset-password");
-      } else {
-        router.push("/verify-otp");
-      }
-    },
+  if (mustReset) {
+    router.push("/reset-password");
+  } else {
+    router.push("/verify-otp");
+  }
+},
     onError: () => {
       setErrorMessage("Invalid credentials"); // Log error and show a notify user whats happening in message
     },
@@ -38,6 +40,11 @@ export default function LoginForm() {
     setErrorMessage("");
     loginMutation.mutate(); // Run the login API
   };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
 
   return (
     <div className="bg-white p-10 shadow-xl w-full max-w-md">
@@ -56,14 +63,23 @@ export default function LoginForm() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <Input
-          type="password"
-          placeholder="Enter your password"
-          icon={Lock}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="relative">
+          <Input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password"
+            icon={Lock}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
         <Button
           type="submit"
           label={loginMutation.isPending ? "Log In..." : "Log In"}

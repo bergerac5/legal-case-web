@@ -1,10 +1,16 @@
+import LoginForm from "@/components/auth/LoginForm";
+import backgroundPic from "../assets/BgPc.jpeg";
 export default function Home() {
   return (
-   <div>
-    <div className="p-8">
-        <h1 className="text-2xl font-bold mb-4 text-center">Home Page</h1>
-        {/*to do home page content here */}
+    <div className="relative w-screen h-screen overflow-hidden">
+      <img
+        src={backgroundPic.src}
+        alt="Background"
+        className="absolute top-0 left-0 w-full h-full object-fill"
+      />
+      <div className="relative z-10 flex items-center justify-center h-full">
+        <LoginForm />
       </div>
-   </div>
+    </div>
   );
 }

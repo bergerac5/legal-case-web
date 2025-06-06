@@ -83,6 +83,31 @@ export const deleteCase = async (id: string) => {
   }
 };
 
+export const getCasesByLawyerId = async (
+  lawyerId: string,
+  page: number,
+  limit: number = 5
+): Promise<PaginatedCaseResponse> => {
+  try {
+    const response = await axios.get<PaginatedCaseResponse>(
+      `${API_BASE_URL}/cases/lawyer/${lawyerId}`,
+      { params: { page, limit } }
+    );
+    return response.data;
+  } catch (error) {
+    return {
+      data: [],
+      meta: {
+        total: 0,
+        page,
+        limit,
+        totalPages: 0,
+      },
+    };
+  }
+};
+
+
 // Error handling utility
 const handleCaseError = (error: unknown, defaultMessage: string) => {
   if (axios.isAxiosError(error)) {
@@ -112,4 +137,5 @@ export const caseAPI = {
   update: updateCase,
   updateStatus: updateCaseStatus,
   delete: deleteCase,
+  getByLawyerId: getCasesByLawyerId,
 };

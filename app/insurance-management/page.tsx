@@ -4,7 +4,7 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 
 const InsuranceManagementPage = () => {
   return (
-    <ProtectedRoute allowedRoles={["Admin","Lawyer"]}>
+    <ProtectedRoute allowedRoles={["Manager"]}>
       <div>
       <Navbar/> 
         <div>

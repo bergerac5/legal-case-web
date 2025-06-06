@@ -1,5 +1,6 @@
 
 import { EditHearingForm } from "@/components/hearing/editHearing";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { getHearingById } from "@/services/hearing/hearing.api";
 
 interface PageProps {
@@ -20,11 +21,14 @@ export default async function EditHearingPage({ params }: PageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <ProtectedRoute allowedRoles={["Lawyer"]}>
+      <div className="container mx-auto px-4 py-8">
       <EditHearingForm 
         hearingId={params.id} 
         caseId={hearing.case_id} 
       />
     </div>
+    </ProtectedRoute>
+    
   );
 }
